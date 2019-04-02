@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "508786005720",
+    "firebase_url": "https://phoppa-233818.firebaseio.com",
+    "project_id": "phoppa-233818",
+    "storage_bucket": "phoppa-233818.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508786005720:android:1b7829f2ac180d28",
+        "android_client_info": {
+          "package_name": "com.example.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508786005720-qhri3ni9m2lv093ff030c4tbfr36al5b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firebase",
+            "certificate_hash": "77a12a5888e05bd7a74e894a71de8d25a592f0f9"
+          }
+        },
+        {
+          "client_id": "508786005720-sdhrv5i42jc3as9nvq2svae7qhdcb3s9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq4Q1nT_9e3HgfnkwRT_QKpU2Oufhjnhs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508786005720-sdhrv5i42jc3as9nvq2svae7qhdcb3s9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

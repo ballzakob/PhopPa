@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">PhobPa</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string-array name="types">
+        <item>เลือกประเภท</item>
+        <item>อาหาร</item>
+        <item>แฟชั่น</item>
+        <item>เครื่องสำอาง</item>
+        <item>กีฬา</item>
+        <item>บันเทิง</item>
+        <item>ท่องเที่ยว</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_home"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/juicy_cake">
+
+
+        <Button
+            android:id="@+id/button_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:text="ค้นหา"
+            android:textColor="@color/white"
+            android:textSize="14dp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/ic_search_black_24dp" />
+
+                    <com.cielyang.android.clearableedittext.ClearableEditText
+                        android:id="@+id/button_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@null"
+                        android:hint="ค้นหา"
+                        android:imeOptions="actionSearch"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_home"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewFood"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="6dp"
+                    android:src="@drawable/search_food" />
+
+                <ImageView
+                    android:id="@+id/imageViewCosmetics"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="6dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+
+                    android:src="@drawable/search_cosmetics" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewFashion"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="6dp"
+                    android:src="@drawable/search_fashion" />
+
+                <ImageView
+                    android:id="@+id/imageViewSport"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="6dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+
+                    android:src="@drawable/search_sport" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewEntertainment"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="6dp"
+                    android:src="@drawable/search_entertainment" />
+
+                <ImageView
+                    android:id="@+id/imageViewTravel"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="6dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:src="@drawable/search_travel" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="9dp">
+
+            </View>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</RelativeLayout>
