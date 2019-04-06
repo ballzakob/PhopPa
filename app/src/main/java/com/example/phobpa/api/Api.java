@@ -64,7 +64,7 @@ public interface Api {
     );
 
     @FormUrlEncoded
-    @POST("geteventnotme.php")
+    @POST("geteventnotme2.php")
     Call<EventResponse> getEventNotMe(
             @Field("email") String email,
             @Field("event_latitude") String event_latitude,

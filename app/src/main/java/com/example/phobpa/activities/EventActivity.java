@@ -6,6 +6,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private GoogleMap mMap;
     private MapView mapView;
     private CircleImageView circleImageViewOwnerEvent;
+    private Button buttonSignUp;
+    private int countJoint=0;
+    private int countMax=0;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -54,6 +58,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         findViewById(R.id.button_back_home).setOnClickListener(this);
+        findViewById(R.id.buttonSignUp).setOnClickListener(this);
 
         textViewEventTitle = findViewById(R.id.textViewEventTitle);
         textViewEventDetail = findViewById(R.id.textViewEventDetail);
@@ -67,6 +72,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         textViewEventLocationName = findViewById(R.id.textViewEventLocationName);
         textViewNumberPeople = findViewById(R.id.textViewNumberPeople);
 
+
         imageViewEvent = findViewById(R.id.imageViewEvent);
 
         String event_id = getIntent().getExtras().getString("event_id");
@@ -78,6 +84,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         String event_location_name = getIntent().getExtras().getString("event_location_name");
         String event_location_address = getIntent().getExtras().getString("event_location_address");
         String gender = getIntent().getExtras().getString("event_gender");
+        countMax = Integer.valueOf( event_number_people);
 
         String picture = getIntent().getExtras().getString("event_image");
         if (picture.isEmpty()) {
@@ -160,6 +167,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 System.out.println(response.body().getMessages());
                 System.out.println(response.body().getUsers().size());
                 if (response.body().isStatus()) {
+                    countJoint= response.body().getUsers().size();
                     String count= String.valueOf(response.body().getUsers().size());
                     System.out.println(count);
                     textViewNumberPeople.setText(count);
@@ -177,12 +185,53 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
 
     }
+    public boolean validateCountPeople(){
+        if(countJoint < countMax){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void sendData(){
+        String event_id = getIntent().getExtras().getString("event_id");
+        String email = SharedPrefManager.getInstance(this).getUser().getEmail();
+        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().jointEvent(event_id,email);
+        call.enqueue(new Callback<DefaultResponse>() {
+            @Override
+            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                if (response.body().isStatus()) {
+                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultResponse> call, Throwable t) {
+
+            }
+        });
+    }
+    public void validateError(){
+        if(validateCountPeople()){
+            sendData();
+            finish();
+        }else{
+            Toast.makeText(EventActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
+        }
+
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_back_home:
                 finish();
+                break;
+            case R.id.buttonSignUp:
+                validateError();
+
                 break;
         }
     }

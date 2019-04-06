@@ -21,4 +21,6 @@ public class Sub2Fragment extends Fragment {
         return inflater.inflate(R.layout.fragment_sub2, container, false);
     }
 
+    public interface OnFragmentInteractionListener {
+    }
 }
