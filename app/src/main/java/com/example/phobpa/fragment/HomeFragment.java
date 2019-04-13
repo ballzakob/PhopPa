@@ -27,7 +27,7 @@ import com.example.phobpa.RecyclerItemClickListener;
 import com.example.phobpa.activities.EventActivity;
 import com.example.phobpa.activities.MapsActivity;
 import com.example.phobpa.activities.MessagesActivity;
-import com.example.phobpa.activities.ProfileActivity;
+import com.example.phobpa.activities.SettingsActivity;
 import com.example.phobpa.activities.SelectTypeActivity;
 import com.example.phobpa.adapter.EventMeAdapter;
 import com.example.phobpa.api.RetrofitClient;
@@ -104,13 +104,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
             Picasso.get().load(url).into(circleImageView_profile);
         }
-        circleImageView_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i =  new Intent(getContext(), ProfileActivity.class);
-                startActivity(i);
-            }
-        });
+//        circleImageView_profile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i =  new Intent(getContext(), SettingsActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
 
         // TODO: 2019-03-07  สร้าง layout มาโชว์

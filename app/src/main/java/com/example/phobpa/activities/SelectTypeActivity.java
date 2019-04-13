@@ -27,7 +27,7 @@ public class SelectTypeActivity extends AppCompatActivity implements AdapterView
     Spinner spinner;
     String types="";
     TextView textViewEventNameLocation;
-    Button buttonNext , buttonBack;
+    Button buttonNext , buttonBack,buttonSkip;
 
     String name_event = "";
     String address_event = "";
@@ -44,6 +44,7 @@ public class SelectTypeActivity extends AppCompatActivity implements AdapterView
         textViewEventNameLocation = findViewById(R.id.textViewEventNameLocation);
         buttonNext = findViewById(R.id.buttonNext);
         buttonBack = findViewById(R.id.buttonBack);
+        buttonSkip = findViewById(R.id.buttonSkip);
 
         // ทำ spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -87,6 +88,14 @@ public class SelectTypeActivity extends AppCompatActivity implements AdapterView
             }
         });
 
+        buttonSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SelectTypeActivity.this,CreateEventActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         textViewEventNameLocation.setClickable(true);
         // ทำ หน้าเลือกสถานที่
@@ -116,7 +125,7 @@ public class SelectTypeActivity extends AppCompatActivity implements AdapterView
         } else if(text.equals("ท่องเที่ยว")){
             types = "ท่องเที่ยว";
         }
-        Toast.makeText(parent.getContext(), types, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(parent.getContext(), types, Toast.LENGTH_SHORT).show();
     }
 
     @Override

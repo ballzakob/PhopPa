@@ -1,12 +1,15 @@
 package com.example.phobpa.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 import com.example.phobpa.R;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsUsers.DefaultResponse;
+import com.example.phobpa.modelsUsers.StatusResponse;
 import com.example.phobpa.storage.SharedPrefManager;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -70,7 +74,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
 
     private SeekBar seekBar;
 
-    Button buttonCreateEvent, buttonBack;
+    private Button buttonBack;
 
     ImageView imageViewEvent;
     private int SELECT_IMAGE = 1001;
@@ -87,7 +91,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         textViewEventNameLocation = findViewById(R.id.textViewEventNameLocation);
         textInputTitle = findViewById(R.id.text_input_title);
         textInputDetial = findViewById(R.id.text_input_detial);
-        buttonCreateEvent = findViewById(R.id.buttonCreateEvent);
+        final Button buttonCreateEvent = findViewById(R.id.buttonCreateEvent);
         buttonBack = findViewById(R.id.buttonBack);
         textViewEventSelectDateStart = findViewById(R.id.textViewEventSelectDateStart);
         textViewEventSelectTimeStart = findViewById(R.id.textViewEventSelectTimeStart);
@@ -102,7 +106,23 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(CreateEventActivity.this);
+                builder.setMessage("ต้องการยกเลิกการสร้างกิจกรรม?");
+                builder.setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "ยกเลิกการสร้างกิจกรรม", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("ไม่", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dialog.dismiss();
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -115,7 +135,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         });
 
 
-        // ทำ spinner
+        // todo: ทำ spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -123,7 +143,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         spinner.setOnItemSelectedListener(this);
 
 
-        // ทำ หน้าเลือกสถานที่
+        // todo: ทำ หน้าเลือกสถานที่
         textViewEventNameLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +152,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         });
 
 
-        // เช็ค error ของ ชื่อกิจกรรม
+        // todo: เช็ค error ของ ชื่อกิจกรรม
         textInputTitle.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -237,17 +257,6 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-//                                if(hourOfDay>12){
-//                                    textViewEventSelectTimeStart.setText(String.valueOf(hourOfDay-12)+ ":"+(String.valueOf(minutes)+" pm"));
-//                                }else if(hourOfDay==12) {
-//                                    textViewEventSelectTimeStart.setText("12"+ ":"+(String.valueOf(minutes)+" pm"));
-//                                } else if(hourOfDay<12) {
-//                                    if(hourOfDay!=0) {
-//                                        textViewEventSelectTimeStart.setText(String.valueOf(hourOfDay) + ":" + (String.valueOf(minutes) + " am"));
-//                                    } else {
-//                                        textViewEventSelectTimeStart.setText("12" + ":" + (String.valueOf(minutes) + " am"));
-//                                    }
-//                                }
                                 String str = "";
                                 if (hourOfDay < 10) {
                                     if (minutes < 10) {
@@ -337,14 +346,67 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
             }
         });
 
+//        Call<StatusResponse> call = RetrofitClient.getInstance()
+//                .getApi().getStatusEvent(
+//                        SharedPrefManager.getInstance(CreateEventActivity.this).getUser().getEmail()
+//                );
+//
+//
+//        call.enqueue(new Callback<StatusResponse>() {
+//            @Override
+//            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
+//
+//                if (response.body().isStatus()) {
+//
+//                    if(response.body().getStatus_event().equals("wait")){
+//
+//                        Drawable img = CreateEventActivity.this.getResources().getDrawable( R.drawable.ic_wait_white );
+//                        buttonCreateEvent.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+//                        buttonCreateEvent.setBackground(CreateEventActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
+//                        buttonCreateEvent.setTextColor(Color.parseColor("#80FFFFFF"));
+//                        buttonCreateEvent.setText(" กำลังตรวจสอบการยืนยันตัวตน");
+//
+//
+//                    }else if(response.body().getStatus_event().equals("no")){
+//
+//                        buttonCreateEvent.setBackground(CreateEventActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
+//                        buttonCreateEvent.setText("กรุณายืนยันตัวตน");
+//                        buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent i = new Intent(CreateEventActivity.this,ConfirmIdentityActivity.class);
+//                                startActivity(i);
+//                                finish();
+//                            }
+//                        });
+//
+//                    }else{
+//                        // เมื่อกดปุ่ม buttonCreateEvent
+//                        buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                createEvent();
+//                            }
+//                        });
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<StatusResponse> call, Throwable t) {
+//
+//            }
+//        });
 
-        // เมื่อกดปุ่ม buttonCreateEvent
+// เมื่อกดปุ่ม buttonCreateEvent
         buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createEvent();
             }
         });
+
 
 
     }
@@ -515,6 +577,17 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
 
         Toast.makeText(this, "Selected Radio Button: " + radioButton.getText(),
                 Toast.LENGTH_SHORT).show();
+
+    }
+
+    public boolean validationError(){
+        if (!checkLocation() || !checkTypes() || !validateTitle() || !validateDetial() ||
+                !checkDateStart() || !checkDateEnd() || !checkTimeStart() || !checkTimeEnd() ||
+                image_event.equals("")) {
+            return false;
+        }else{
+            return true;
+        }
     }
 
 //        method สร้าง Event
@@ -528,71 +601,90 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         checkDateEnd();
         checkTimeStart();
         checkTimeEnd();
-        if (!checkLocation() || !checkTypes() || !validateTitle() || !validateDetial() ||
-                !checkDateStart() || !checkDateEnd() || !checkTimeStart() || !checkTimeEnd() ||
-               image_event.equals("")) {
-            Toast.makeText(this, "กรอกข้อมูลให้ครบถ้วน", Toast.LENGTH_SHORT).show();
+
+        if (!validationError()) {
+            Toast.makeText(this, "กรอกข้อมูลไม่ครบ", Toast.LENGTH_SHORT).show();
             return;
         }
-        String email = SharedPrefManager.getInstance(this).getUser().getEmail();
-        String title = textInputTitle.getEditText().getText().toString().trim();
-        String detial = textInputDetial.getEditText().getText().toString().trim();
-        String dateStart = textViewEventSelectDateStart.getText().toString().trim();
-        String dateEnd = textViewEventSelectDateEnd.getText().toString().trim();
-        String timeStart = textViewEventSelectTimeStart.getText().toString().trim();
-        String timeEnd = textViewEventSelectTimeEnd.getText().toString().trim();
-        String nemberPeople = textViewNumber.getText().toString().trim();
+        else {
+
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(CreateEventActivity.this);
+            builder.setMessage("ข้อมูลถูกต้อง?");
+            builder.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String email = SharedPrefManager.getInstance(CreateEventActivity.this).getUser().getEmail();
+                    String title = textInputTitle.getEditText().getText().toString().trim();
+                    String detial = textInputDetial.getEditText().getText().toString().trim();
+                    String dateStart = textViewEventSelectDateStart.getText().toString().trim();
+                    String dateEnd = textViewEventSelectDateEnd.getText().toString().trim();
+                    String timeStart = textViewEventSelectTimeStart.getText().toString().trim();
+                    String timeEnd = textViewEventSelectTimeEnd.getText().toString().trim();
+                    String nemberPeople = textViewNumber.getText().toString().trim();
+
+                    int radioId = radioGroup.getCheckedRadioButtonId();
+                    radioButton = findViewById(radioId);
+                    String gender = radioButton.getText().toString();
+
+                    if (gender.equals("ทุกเพศ")) {
+                        gender = "a";
+                    } else if (gender.equals("หญิง")) {
+                        gender = "f";
+                    } else {
+                        gender = "m";
+                    }
+
+                    String event_date_start = dateStart + " " + timeStart;
+                    String event_date_end = dateEnd + " " + timeEnd;
+
+                    System.out.println("email : " + email);
+                    System.out.println("event_title : " + title);
+                    System.out.println("event_detail : " + detial);
+                    System.out.println("event_date_start : " + dateStart + " " + timeStart);
+                    System.out.println("event_date_end : " + dateEnd + " " + timeEnd);
+                    System.out.println("event_number_people : " + nemberPeople);
+                    System.out.println("event_gender : " + gender);
+                    System.out.println("event_types : " + types);
+                    System.out.println("event_location_name : " + name_event);
+                    System.out.println("event_latitude : " + latitude_event);
+                    System.out.println("event_longitude : " + longitude_event);
+                    System.out.println("event_image : "+image_event);
+                    Call<DefaultResponse> call = RetrofitClient
+                            .getInstance()
+                            .getApi()
+                            .createEvent(email, title, detial,event_date_start,event_date_end,nemberPeople,
+                                    gender, types, name_event, address_event, latitude_event,
+                                    longitude_event, image_event);
+                    call.enqueue(new Callback<DefaultResponse>() {
+                        @Override
+                        public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                            if (response.body().isStatus()) {
+                                Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<DefaultResponse> call, Throwable t) {
+                            Toast.makeText(CreateEventActivity.this, "FAIL", Toast.LENGTH_LONG).show();
+                        }
+                    });
+//                finish();
+                }
+            });
+            builder.setNegativeButton("ไม่ยืนยัน", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //dialog.dismiss();
+                }
+            });
+            builder.show();
 
 
-        int radioId = radioGroup.getCheckedRadioButtonId();
-        radioButton = findViewById(radioId);
-        String gender = radioButton.getText().toString();
-        if (gender.equals("ทุกเพศ")) {
-            gender = "a";
-        } else if (gender.equals("หญิง")) {
-            gender = "f";
-        } else {
-            gender = "m";
         }
 
-        String event_date_start = dateStart + " " + timeStart;
-        String event_date_end = dateEnd + " " + timeEnd;
-
-        System.out.println("email : " + email);
-        System.out.println("event_title : " + title);
-        System.out.println("event_detail : " + detial);
-        System.out.println("event_date_start : " + dateStart + " " + timeStart);
-        System.out.println("event_date_end : " + dateEnd + " " + timeEnd);
-        System.out.println("event_number_people : " + nemberPeople);
-        System.out.println("event_gender : " + gender);
-        System.out.println("event_types : " + types);
-//        System.out.println("event_price : "+email);
-        System.out.println("event_location_name : " + name_event);
-        System.out.println("event_latitude : " + latitude_event);
-        System.out.println("event_longitude : " + longitude_event);
-        System.out.println("event_image : "+image_event);
-        Call<DefaultResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .createEvent(email, title, detial,event_date_start,event_date_end,nemberPeople,
-                        gender, types, name_event, address_event, latitude_event,
-                        longitude_event, image_event);
-        call.enqueue(new Callback<DefaultResponse>() {
-            @Override
-            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
-                if (response.body().isStatus()) {
-                    Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                    finish();
-                } else {
-                    Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DefaultResponse> call, Throwable t) {
-                Toast.makeText(CreateEventActivity.this, "FAIL", Toast.LENGTH_LONG).show();
-            }
-        });
 
     }
 

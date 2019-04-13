@@ -1,9 +1,11 @@
 package com.example.phobpa.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -357,33 +359,58 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    public boolean validationError(){
+        if(!validateEmail() || !validatePassword() || !validateConfirmPassword() || !validateFirstname()
+                || !validateLastname() || !validateTelephone() || !validateBD() || image_user.equals("")){
+            return false;
+        }else{
+            return true;
+        }
+    }
 
     private void userSignUp() {
         System.out.println("รูป : "+ image_user);
-        if (!validateEmail() || !validatePassword() || !validateConfirmPassword() || !validateFirstname()
-                || !validateLastname() || !validateTelephone() || !validateBD() || image_user.equals("")) {
+        if (!validationError()) {
             Toast.makeText(this, "กรอกข้อมูลไม่ครบ", Toast.LENGTH_LONG).show();
             return;
         } else {
             Toast.makeText(this, "กรอกข้อมูลครบถ้วน", Toast.LENGTH_LONG).show();
-        }
-        String email = textInputEmail.getEditText().getText().toString().trim();
-        String password = textInputPassword.getEditText().getText().toString().trim();
-        String firstname = textInputFirstname.getEditText().getText().toString().trim();
-        String lastname = textInputLastname.getEditText().getText().toString().trim();
-        int radioId = radioGroup.getCheckedRadioButtonId();
-        radioButton = findViewById(radioId);
-        String gender = radioButton.getText().toString();
-        if (gender.equals("ชาย")) {
-            gender = "m";
-        } else {
-            gender = "f";
-        }
-        String birthday = textViewBirthday.getText().toString().trim();
-        String telephone = textInputTelephone.getEditText().getText().toString().trim();
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(RegisterActivity.this);
+            builder.setMessage("ข้อมูลถูกต้อง?");
+            builder.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String email = textInputEmail.getEditText().getText().toString().trim();
+                    String password = textInputPassword.getEditText().getText().toString().trim();
+                    String firstname = textInputFirstname.getEditText().getText().toString().trim();
+                    String lastname = textInputLastname.getEditText().getText().toString().trim();
+                    int radioId = radioGroup.getCheckedRadioButtonId();
+                    radioButton = findViewById(radioId);
+                    String gender = radioButton.getText().toString();
+                    if (gender.equals("ชาย")) {
+                        gender = "m";
+                    } else {
+                        gender = "f";
+                    }
+                    String birthday = textViewBirthday.getText().toString().trim();
+                    String telephone = textInputTelephone.getEditText().getText().toString().trim();
 
-        System.out.println("รูป : "+ image_user);
-        create_user_php(email, password, firstname, lastname, gender, birthday, telephone, image_user);
+                    System.out.println("รูป : "+ image_user);
+
+                    create_user_php(email, password, firstname, lastname, gender, birthday, telephone, image_user);
+//                finish();
+                }
+            });
+            builder.setNegativeButton("ไม่ยืนยัน", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //dialog.dismiss();
+                }
+            });
+            builder.show();
+        }
+
+
     }
 
     private void create_user_php(String email, String password, String firstname, String lastname, String gender,
@@ -455,9 +482,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonSignUp:
-//                dialog = new ProgressDialog(RegisterActivity.this);
-//                dialog.setMessage("Loading");
-//                dialog.show();
                 userSignUp();
                 break;
             case R.id.textViewBirthdayRG:

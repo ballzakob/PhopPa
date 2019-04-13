@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = search;
                             break;
                         case R.id.nav_my_event:
-                            selectedFragment = my_event;
+                            selectedFragment = new MyEventFragment();
                             break;
                     }
 

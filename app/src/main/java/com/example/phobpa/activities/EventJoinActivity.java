@@ -1,8 +1,6 @@
 package com.example.phobpa.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,10 +15,8 @@ import android.widget.Toast;
 import com.example.phobpa.R;
 import com.example.phobpa.adapter.UserJoinAdapter;
 import com.example.phobpa.api.RetrofitClient;
-import com.example.phobpa.fragment.HomeFragment;
 import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.modelsUsers.JoinResponse;
-import com.example.phobpa.modelsUsers.StatusResponse;
 import com.example.phobpa.modelsUsers.User;
 import com.example.phobpa.modelsUsers.UserResponse;
 import com.example.phobpa.storage.SharedPrefManager;
@@ -41,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EventActivity extends AppCompatActivity implements View.OnClickListener,OnMapReadyCallback {
+public class EventJoinActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
             textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent ,textViewEventLocationName
@@ -55,7 +50,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private CircleImageView circleImageViewOwnerEvent;
     private int countJoint=0;
     private int countMax=0;
-    private Button buttonSignUp;
 
     private RecyclerView recyclerView;
     private UserJoinAdapter adapter;
@@ -65,12 +59,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
+        setContentView(R.layout.activity_event_join);
         findViewById(R.id.button_back_home).setOnClickListener(this);
-//        findViewById(R.id.buttonSignUp).setOnClickListener(this);
-
-
-
 
         textViewEventTitle = findViewById(R.id.textViewEventTitle);
         textViewEventDetail = findViewById(R.id.textViewEventDetail);
@@ -162,13 +152,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
 
                 } else {
-                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(EventActivity.this, "FAIL", Toast.LENGTH_LONG).show();
+                Toast.makeText(EventJoinActivity.this, "FAIL", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -186,7 +176,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                     else {
                         System.out.println(response.body().getUsers());
                         userList =response.body().getUsers();
-                        adapter = new UserJoinAdapter(EventActivity.this,userList);
+                        adapter = new UserJoinAdapter(EventJoinActivity.this,userList);
                         recyclerView.setAdapter(adapter);
                     }
 
@@ -206,64 +196,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         recyclerView = findViewById(R.id.recyclerView_home);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
-        buttonSignUp = findViewById(R.id.buttonSignUp);
-
-        Call<StatusResponse> call_status = RetrofitClient.getInstance()
-                .getApi().getStatusEvent(
-                        SharedPrefManager.getInstance(EventActivity.this).getUser().getEmail()
-                );
-
-
-        call_status.enqueue(new Callback<StatusResponse>() {
-            @Override
-            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
-
-
-
-
-                if (response.body().isStatus()) {
-
-                    if(response.body().getStatus_event().equals("wait")){
-
-                        Drawable img = EventActivity.this.getResources().getDrawable( R.drawable.ic_wait_white );
-                        buttonSignUp.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                        buttonSignUp.setBackground(EventActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
-                        buttonSignUp.setTextColor(Color.parseColor("#80FFFFFF"));
-                        buttonSignUp.setText(" กำลังตรวจสอบการยืนยันตัวตน");
-
-
-                    }else if(response.body().getStatus_event().equals("no")){
-
-                        buttonSignUp.setText("กรุณายืนยันตัวตนก่อนเข้าร่วม");
-                        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(EventActivity.this,ConfirmIdentityActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        });
-
-                    }else{
-                        // เมื่อกดปุ่ม buttonCreateEvent
-                        buttonSignUp.setText("เข้าร่วมกิจกรรม");
-                        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                validateError();
-                            }
-                        });
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<StatusResponse> call, Throwable t) {
-
-            }
-        });
-
 
     }
     public boolean validateCountPeople(){
@@ -274,37 +206,38 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void sendData(){
-        String event_id = getIntent().getExtras().getString("event_id");
-        String email = SharedPrefManager.getInstance(this).getUser().getEmail();
-        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().jointEvent(event_id,email);
-        call.enqueue(new Callback<DefaultResponse>() {
-            @Override
-            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
-                if (response.body().isStatus()) {
-                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                }
-            }
+//    public void sendData(){
+//        String event_id = getIntent().getExtras().getString("event_id");
+//        String email = SharedPrefManager.getInstance(this).getUser().getEmail();
+//        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().jointEvent(event_id,email);
+//        call.enqueue(new Callback<DefaultResponse>() {
+//            @Override
+//            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+//                if (response.body().isStatus()) {
+//                    Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+//                }else{
+//                    Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DefaultResponse> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 
-            @Override
-            public void onFailure(Call<DefaultResponse> call, Throwable t) {
-
-            }
-        });
-    }
-    public void validateError(){
-        if(validateCountPeople()){
-            sendData();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }else{
-            Toast.makeText(EventActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
-        }
-
-    }
+//    public void validateError(){
+//        if(validateCountPeople()){
+//            sendData();
+//            Intent intent = new Intent(this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }else{
+//            Toast.makeText(EventJoinActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
+//        }
+//
+//    }
 
     @Override
     public void onClick(View v) {
@@ -312,9 +245,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             case R.id.button_back_home:
                 finish();
                 break;
-//            case R.id.buttonSignUp:
-//                validateError();
-//                break;
         }
     }
 

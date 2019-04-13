@@ -19,6 +19,7 @@
     <uses-feature
         android:glEsVersion="0x00030000"
         android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,7 +27,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SelectTypeActivity"></activity>
+
+        <activity android:name=".activities.EventJoinActivity" />
+        <activity android:name=".activities.EventMeActivity" />
+        <activity android:name=".activities.SelectTypeActivity" />
         <activity android:name=".activities.ShowEventActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -39,21 +43,28 @@
         <!-- AIzaSyDNzfaOxZ0AyMXMzDBZuNwCDqKe1MoMEj0      รหัสใครไม่รู้ใช้ได้เอาเลย -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDNzfaOxZ0AyMXMzDBZuNwCDqKe1MoMEj0" />
-            <!--android:value="@string/google_maps_key" -->
-
+            android:value="AIzaSyDNzfaOxZ0AyMXMzDBZuNwCDqKe1MoMEj0" /> <!-- android:value="@string/google_maps_key" -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
+
+        <activity
+            android:name=".activities.ConfirmIdentityActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CreateEventActivity"
             android:windowSoftInputMode="stateHidden" />
+
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.SettingsActivity" />
+        <activity
+            android:name=".activities.EditProfileActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.RegisterActivity"
             android:windowSoftInputMode="stateHidden" />

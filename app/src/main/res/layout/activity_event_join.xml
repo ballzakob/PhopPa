@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.EventActivity">
+    tools:context=".activities.EventJoinActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -389,8 +389,10 @@
             android:elevation="5dp"
             android:paddingRight="50dp"
             android:paddingLeft="50dp"
+            android:text="คุณได้เข้าร่วมกิจกรรมนี้แล้ว"
             android:textAllCaps="false"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
     </com.dd.ShadowLayout>
 

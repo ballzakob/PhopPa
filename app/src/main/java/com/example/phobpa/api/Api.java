@@ -4,6 +4,7 @@ import com.example.phobpa.modelsEvents.EventResponse;
 import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.modelsUsers.JoinResponse;
 import com.example.phobpa.modelsUsers.LoginResponse;
+import com.example.phobpa.modelsUsers.StatusResponse;
 import com.example.phobpa.modelsUsers.UserResponse;
 
 import retrofit2.Call;
@@ -64,7 +65,7 @@ public interface Api {
     );
 
     @FormUrlEncoded
-    @POST("geteventnotme2.php")
+    @POST("geteventnotme.php")
     Call<EventResponse> getEventNotMe(
             @Field("email") String email,
             @Field("event_latitude") String event_latitude,
@@ -93,6 +94,36 @@ public interface Api {
             @Field("email") String email
     );
 
+    @FormUrlEncoded
+    @POST("getEventMeJoin.php")
+    Call<EventResponse> getEventMeJoin(
+            @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("updateProfile.php")
+    Call<LoginResponse> updateProfile(
+            @Field("email") String email,
+            @Field("firstname") String firstname,
+            @Field("lastname") String lastname,
+            @Field("birthday") String birthday,
+            @Field("telephone") String telephone
+    );
+
+    @FormUrlEncoded
+    @POST("confirmIdentity.php")
+    Call<DefaultResponse> confirmIdentity(
+            @Field("email") String email,
+            @Field("idcard") String idcard,
+            @Field("image_idcard") String image_idcard
+
+    );
+
+    @FormUrlEncoded
+    @POST("getStatusEvent.php")
+    Call<StatusResponse> getStatusEvent(
+            @Field("email") String email
+    );
 
 
 }

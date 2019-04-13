@@ -6,11 +6,16 @@
     tools:context=".fragment.Sub1Fragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textView"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayoutCreateEvent"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
         android:gravity="center"
-        android:text="gdsgdsdsfsdfdsf" />
+        android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+
 
 </LinearLayout>

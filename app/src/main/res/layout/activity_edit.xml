@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EditProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background">
+
+
+        <TextView
+            android:id="@+id/textActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="แก้ไขข้อมูลส่วนตัว"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_back_24dp" />
+
+
+        <TextView
+            android:id="@+id/textAccept"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="เสร็จ"
+            android:textColor="@color/white" />
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_below="@id/toolbar_home"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <com.dd.ShadowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:sl_cornerRadius="75dp"
+            app:sl_dx="3dp"
+            app:sl_dy="5dp"
+            app:sl_shadowColor="#1D000000"
+            app:sl_shadowRadius="5dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/circleImageView_profile"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/user" />
+        </com.dd.ShadowLayout>
+
+        <TextView
+            android:id="@+id/textViewEditPic"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center|center_horizontal"
+            android:padding="20dp"
+            android:text="แก้ไข"
+            android:textSize="12dp" />
+
+
+        <TextView
+            android:id="@+id/textViewProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:text="ข้อมูลส่วนตัว"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="105dp"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="ชื่อจริง"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editTextFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="ชื่อจริง"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="105dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="นามสกุล"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editTextLastName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="นามสกุล"
+                android:padding="10dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="105dp"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="วันเกิด"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editTextBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="ปปปป-ดด-วว"
+                android:padding="10dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="105dp"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:hint="เบอร์โทรศัพท์"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editTextTelephone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="เบอร์โทรศัพท์"
+                android:padding="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/juicy_cake">
+    android:background="@drawable/background">
 
 
 
@@ -19,29 +19,32 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="phoppa"
+            android:text="กิจกรรมของฉัน"
             android:textColor="#ffffff"
             android:textSize="18dp" />
 
 
-        <Button
-            android:id="@+id/button_profile"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circleImageView_profile"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/ic_account" />
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_account" />
 
 
         <Button
-            android:id="@+id/button_messages"
+            android:id="@+id/button_settings"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/ic_message_white_24dp" />
+            android:background="@drawable/settings_white" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tablayout"
+        app:tabTextColor="@color/white"
+        app:tabIndicatorColor="@color/white"
         android:layout_below="@id/toolbar_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

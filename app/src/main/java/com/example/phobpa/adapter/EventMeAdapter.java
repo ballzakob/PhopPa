@@ -44,7 +44,7 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
         String picture = event.getEvent_image();
         System.out.println(picture);
         if(picture.isEmpty()){
-            eventViewHolder.imageViewEvent.setImageResource(R.drawable.picture);
+            eventViewHolder.imageViewEvent.setImageResource(R.drawable.no_image);
         }else{
             String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/event_img/"+picture;
             Picasso.get().load(url).into(eventViewHolder.imageViewEvent);
