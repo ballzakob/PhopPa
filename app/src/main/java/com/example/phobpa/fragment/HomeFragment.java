@@ -139,12 +139,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         intent.putExtra("event_latitude",eventList.get(position).getEvent_latitude());
                         intent.putExtra("event_longitude",eventList.get(position).getEvent_longitude());
                         intent.putExtra("event_image",eventList.get(position).getEvent_image());
+                        intent.putExtra("event_price",eventList.get(position).getEvent_price());
                         startActivity(intent);
                         // do whatever
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        String price=  eventList.get(position).getEvent_price();
+//                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "รหัสกิจกรรม : "+eventList.get(position).getEvent_id(), Toast.LENGTH_SHORT).show();
                         // do whatever
                     }
                 })

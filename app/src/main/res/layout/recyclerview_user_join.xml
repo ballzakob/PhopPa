@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageViewJoinUser"
+        android:layout_width="61dp"
+        android:layout_height="61dp"
+        android:layout_below="@id/textViewEventTitle"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/user" />
+
+    <TextView
+        android:id="@+id/textViewNameJoinUser"
+        android:layout_below="@+id/circleImageViewJoinUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="ชื่อจริง
+นามสกุล"
+        android:textSize="12dp" />
+
+</RelativeLayout>

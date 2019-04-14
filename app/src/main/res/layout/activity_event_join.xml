@@ -178,6 +178,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:text="ราคา สินค้า/บริการ"
+                    android:textSize="24dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingRight="15dp"
+                        android:src="@drawable/ic_money_black"/>
+                    <TextView
+                        android:id="@+id/textViewEventPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:paddingRight="15dp"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="บาท   /   ท่าน"
+                        android:textSize="18dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
 
             <View
                 android:layout_width="match_parent"
@@ -340,6 +393,7 @@
                 android:layout_height="160dp"
                 android:layout_weight="1" />
 
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
@@ -389,7 +443,7 @@
             android:elevation="5dp"
             android:paddingRight="50dp"
             android:paddingLeft="50dp"
-            android:text="คุณได้เข้าร่วมกิจกรรมนี้แล้ว"
+            android:text="ยกเลิกการเข้าร่วมกิจกรรม"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="bold" />

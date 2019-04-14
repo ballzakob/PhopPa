@@ -1,5 +1,7 @@
 package com.example.phobpa.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -39,8 +41,8 @@ import retrofit2.Response;
 public class EventJoinActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
-            textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent ,textViewEventLocationName
-            , textViewEventAddress ,textViewNumberPeople , textViewShowText;
+            textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent, textViewEventLocationName,
+            textViewEventAddress, textViewNumberPeople, textViewShowText, textViewEventPrice;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -48,8 +50,8 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
     private GoogleMap mMap;
     private MapView mapView;
     private CircleImageView circleImageViewOwnerEvent;
-    private int countJoint=0;
-    private int countMax=0;
+    private int countJoint = 0;
+    private int countMax = 0;
 
     private RecyclerView recyclerView;
     private UserJoinAdapter adapter;
@@ -61,6 +63,7 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_join);
         findViewById(R.id.button_back_home).setOnClickListener(this);
+        findViewById(R.id.buttonSignUp).setOnClickListener(this);
 
         textViewEventTitle = findViewById(R.id.textViewEventTitle);
         textViewEventDetail = findViewById(R.id.textViewEventDetail);
@@ -74,6 +77,7 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         textViewEventLocationName = findViewById(R.id.textViewEventLocationName);
         textViewNumberPeople = findViewById(R.id.textViewNumberPeople);
         textViewShowText = findViewById(R.id.textViewShowText);
+        textViewEventPrice = findViewById(R.id.textViewEventPrice);
 
 
         imageViewEvent = findViewById(R.id.imageViewEvent);
@@ -87,7 +91,8 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         String event_location_name = getIntent().getExtras().getString("event_location_name");
         String event_location_address = getIntent().getExtras().getString("event_location_address");
         String gender = getIntent().getExtras().getString("event_gender");
-        countMax = Integer.valueOf( event_number_people);
+        String price = getIntent().getExtras().getString("event_price");
+        countMax = Integer.valueOf(event_number_people);
 
         String picture = getIntent().getExtras().getString("event_image");
         if (picture.isEmpty()) {
@@ -106,6 +111,7 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
 
         textViewEventLocationName.setText(event_location_name);
         textViewEventAddress.setText(event_location_address);
+        textViewEventPrice.setText(price);
 
 
         System.out.println(gender);
@@ -128,7 +134,7 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         mapView.getMapAsync(this);
 
         String email = getIntent().getExtras().getString("email");
-        System.out.println("email : "+getIntent().getExtras().getString("email"));
+        System.out.println("email : " + getIntent().getExtras().getString("email"));
 
         Call<UserResponse> call = RetrofitClient.getInstance().getApi().getUser(email);
         call.enqueue(new Callback<UserResponse>() {
@@ -163,28 +169,27 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         });
 
         Call<JoinResponse> call2 = RetrofitClient.getInstance().getApi().getJoinEventCount(event_id);
-        System.out.println("event_id : " +event_id);
+        System.out.println("event_id : " + event_id);
         call2.enqueue(new Callback<JoinResponse>() {
             @Override
             public void onResponse(Call<JoinResponse> call, Response<JoinResponse> response) {
                 System.out.println(response.body().getMessages());
                 System.out.println(response.body().getUsers().size());
                 if (response.body().isStatus()) {
-                    if(response.body().getUsers().size()==0){
+                    if (response.body().getUsers().size() == 0) {
                         textViewShowText.setText("ยังไม่มีคนเข้าร่วมกิจกรรม");
-                    }
-                    else {
+                    } else {
                         System.out.println(response.body().getUsers());
-                        userList =response.body().getUsers();
-                        adapter = new UserJoinAdapter(EventJoinActivity.this,userList);
+                        userList = response.body().getUsers();
+                        adapter = new UserJoinAdapter(EventJoinActivity.this, userList);
                         recyclerView.setAdapter(adapter);
                     }
 
-                    countJoint= response.body().getUsers().size();
-                    String count= String.valueOf(response.body().getUsers().size());
+                    countJoint = response.body().getUsers().size();
+                    String count = String.valueOf(response.body().getUsers().size());
                     System.out.println(count);
                     textViewNumberPeople.setText(count);
-                }else{
+                } else {
                 }
             }
 
@@ -194,56 +199,68 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
             }
         });
         recyclerView = findViewById(R.id.recyclerView_home);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
     }
-    public boolean validateCountPeople(){
-        if(countJoint < countMax){
+
+    public boolean validateCountPeople() {
+        if (countJoint < countMax) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-//    public void sendData(){
-//        String event_id = getIntent().getExtras().getString("event_id");
-//        String email = SharedPrefManager.getInstance(this).getUser().getEmail();
-//        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().jointEvent(event_id,email);
-//        call.enqueue(new Callback<DefaultResponse>() {
-//            @Override
-//            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
-//                if (response.body().isStatus()) {
-//                    Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-//                }else{
-//                    Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DefaultResponse> call, Throwable t) {
-//
-//            }
-//        });
-//    }
+    public void buttonSignUp(){
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(EventJoinActivity.this);
+        builder.setMessage("ท่านต้องการยกเลิกการเข้าร่วมกิจกรรมใช่หรือไม่ ?");
+        builder.setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
 
-//    public void validateError(){
-//        if(validateCountPeople()){
-//            sendData();
-//            Intent intent = new Intent(this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }else{
-//            Toast.makeText(EventJoinActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
-//        }
-//
-//    }
+                String email = SharedPrefManager.getInstance(EventJoinActivity.this).getUser().getEmail();
+                String event_id = getIntent().getExtras().getString("event_id");
+
+                Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().deleteJoin(event_id,email);
+                call.enqueue(new Callback<DefaultResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                        if(response.body().isStatus()){
+                            Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(EventJoinActivity.this,MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }else{
+                            Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultResponse> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("ไม่", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //dialog.dismiss();
+            }
+        });
+        builder.show();
+
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_back_home:
                 finish();
+                break;
+            case R.id.buttonSignUp:
+                buttonSignUp();
                 break;
         }
     }
@@ -281,21 +298,25 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         super.onStop();
         mapView.onStop();
     }
+
     @Override
     protected void onPause() {
         mapView.onPause();
         super.onPause();
     }
+
     @Override
     protected void onDestroy() {
         mapView.onDestroy();
         super.onDestroy();
     }
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -309,8 +330,8 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         uiSettings.setCompassEnabled(true);
         uiSettings.setZoomControlsEnabled(true);
 
-        String event_latitude =getIntent().getExtras().getString("event_latitude");
-        String event_longitude =getIntent().getExtras().getString("event_longitude");
+        String event_latitude = getIntent().getExtras().getString("event_latitude");
+        String event_longitude = getIntent().getExtras().getString("event_longitude");
 
         LatLng ny = new LatLng(Double.parseDouble(event_latitude), Double.parseDouble(event_longitude));
 

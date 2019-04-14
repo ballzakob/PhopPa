@@ -51,6 +51,7 @@ public interface Api {
             @Field("event_number_people") String event_number_people,
             @Field("event_gender") String event_gender,
             @Field("event_types") String event_types,
+            @Field("event_price") String event_price,
             @Field("event_location_name") String event_location_name,
             @Field("event_location_address") String event_location_address,
             @Field("event_latitude") String event_latitude,
@@ -59,7 +60,7 @@ public interface Api {
     );
 
     @FormUrlEncoded
-    @POST("geteventme.php")
+    @POST("getEventMe.php")
     Call<EventResponse> getEventMe(
             @Field("email") String email
     );
@@ -122,6 +123,13 @@ public interface Api {
     @FormUrlEncoded
     @POST("getStatusEvent.php")
     Call<StatusResponse> getStatusEvent(
+            @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("deleteJoin.php")
+    Call<DefaultResponse> deleteJoin(
+            @Field("event_id") String event_id,
             @Field("email") String email
     );
 

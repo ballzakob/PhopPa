@@ -45,7 +45,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
             textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent ,textViewEventLocationName
-            , textViewEventAddress ,textViewNumberPeople , textViewShowText;
+            , textViewEventAddress ,textViewNumberPeople , textViewShowText, textViewEventPrice;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -84,6 +84,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         textViewEventLocationName = findViewById(R.id.textViewEventLocationName);
         textViewNumberPeople = findViewById(R.id.textViewNumberPeople);
         textViewShowText = findViewById(R.id.textViewShowText);
+        textViewEventPrice = findViewById(R.id.textViewEventPrice);
 
 
         imageViewEvent = findViewById(R.id.imageViewEvent);
@@ -97,6 +98,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         String event_location_name = getIntent().getExtras().getString("event_location_name");
         String event_location_address = getIntent().getExtras().getString("event_location_address");
         String gender = getIntent().getExtras().getString("event_gender");
+        String price = getIntent().getExtras().getString("event_price");
         countMax = Integer.valueOf( event_number_people);
 
         String picture = getIntent().getExtras().getString("event_image");
@@ -116,6 +118,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         textViewEventLocationName.setText(event_location_name);
         textViewEventAddress.setText(event_location_address);
+        textViewEventPrice.setText(price);
 
 
         System.out.println(gender);

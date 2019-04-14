@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -69,6 +70,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog;
 
+    private EditText editTextPrice;
+
     RadioGroup radioGroup;
     RadioButton radioButton;
 
@@ -102,6 +105,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         textViewNumber = findViewById(R.id.textViewNumber);
         textViewEditPic = findViewById(R.id.textViewEditPic);
         imageViewEvent = findViewById(R.id.imageViewEvent);
+        editTextPrice = findViewById(R.id.editTextPrice);
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -575,15 +579,32 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         int radioId = radioGroup.getCheckedRadioButtonId();
         radioButton = findViewById(radioId);
 
-        Toast.makeText(this, "Selected Radio Button: " + radioButton.getText(),
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Selected Radio Button: " + radioButton.getText(),
+//                Toast.LENGTH_SHORT).show();
+
+    }
+
+    public boolean checkPrice() {
+        String price = editTextPrice.getText().toString().trim();
+        if(price.equals("")){
+            editTextPrice.setHintTextColor(Color.RED);
+            return false;
+        }
+        else if( Character.toString(price.charAt(0)).equals(".")){
+            editTextPrice.setTextColor(Color.RED);
+            return false;
+        }else{
+            editTextPrice.setHintTextColor(Color.WHITE);
+            editTextPrice.setTextColor(Color.WHITE);
+            return true;
+        }
 
     }
 
     public boolean validationError(){
         if (!checkLocation() || !checkTypes() || !validateTitle() || !validateDetial() ||
                 !checkDateStart() || !checkDateEnd() || !checkTimeStart() || !checkTimeEnd() ||
-                image_event.equals("")) {
+                image_event.equals("") || !checkPrice()) {
             return false;
         }else{
             return true;
@@ -601,6 +622,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         checkDateEnd();
         checkTimeStart();
         checkTimeEnd();
+        checkPrice();
 
         if (!validationError()) {
             Toast.makeText(this, "กรอกข้อมูลไม่ครบ", Toast.LENGTH_SHORT).show();
@@ -621,6 +643,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                     String timeStart = textViewEventSelectTimeStart.getText().toString().trim();
                     String timeEnd = textViewEventSelectTimeEnd.getText().toString().trim();
                     String nemberPeople = textViewNumber.getText().toString().trim();
+                    String price = editTextPrice.getText().toString().trim();
 
                     int radioId = radioGroup.getCheckedRadioButtonId();
                     radioButton = findViewById(radioId);
@@ -653,7 +676,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                             .getInstance()
                             .getApi()
                             .createEvent(email, title, detial,event_date_start,event_date_end,nemberPeople,
-                                    gender, types, name_event, address_event, latitude_event,
+                                    gender, types, price, name_event, address_event, latitude_event,
                                     longitude_event, image_event);
                     call.enqueue(new Callback<DefaultResponse>() {
                         @Override
