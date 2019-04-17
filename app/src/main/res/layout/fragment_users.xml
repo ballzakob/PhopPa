@@ -12,7 +12,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayoutCreateEvent"
         android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:paddingTop="5dp"
         android:layout_weight="1"
+        android:background="@drawable/background_white"
         android:gravity="center"
         android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
 

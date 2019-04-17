@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.phobpa.R;
 import com.example.phobpa.adapter.UserFirebaseAdapter;
 import com.example.phobpa.modelsUsers.Chat;
+import com.example.phobpa.modelsUsers.Chatlist;
 import com.example.phobpa.modelsUsers.UserFirebase;
 import com.example.phobpa.storage.SharedPrefManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,7 +39,7 @@ public class ChatsFragment extends Fragment {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
-    private List<String> usersList;
+    private List<Chatlist> usersList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,24 +55,17 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
 
-        reference = FirebaseDatabase.getInstance().getReference("Chats");
+        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
-
-                for (DataSnapshot snapshot :dataSnapshot.getChildren()){
-                    Chat chat = snapshot.getValue(Chat.class);
-
-                    if(chat.getSender().equals(firebaseUser.getUid())){
-                        usersList.add(chat.getReceiver());
-                    }
-                    if(chat.getReceiver().equals(firebaseUser.getUid())){
-                        usersList.add(chat.getSender());
-                    }
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
+                    usersList.add(chatlist);
                 }
 
-                readChats();
+                chatList();
             }
 
             @Override
@@ -84,36 +78,24 @@ public class ChatsFragment extends Fragment {
         return v;
     }
 
-    private void readChats() {
+    private void chatList() {
+
         userFirebaseList = new ArrayList<>();
-
         reference = FirebaseDatabase.getInstance().getReference("Users");
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userFirebaseList.clear();
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserFirebase userFirebase = snapshot.getValue(UserFirebase.class);
-
-                    // display 1 users from chats
-                    for(String id : usersList){
-                        if(userFirebase.getId().equals(id)){
-                            if(userFirebaseList.size() != 0){
-                                for (UserFirebase userFirebase1 : userFirebaseList){
-                                    if(!userFirebase.getId().equals(userFirebase1.getId())){
-                                        userFirebaseList.add(userFirebase);
-                                    }
-                                }
-                            } else{
-                                userFirebaseList.add(userFirebase);
-                            }
+                    for(Chatlist chatlist : usersList){
+                        if(userFirebase.getId().equals(chatlist.getId())){
+                            userFirebaseList.add(userFirebase);
                         }
                     }
                 }
 
-                userFirebaseAdapter = new UserFirebaseAdapter(getContext(), userFirebaseList);
+                userFirebaseAdapter = new UserFirebaseAdapter(getContext(),userFirebaseList);
                 recyclerView.setAdapter(userFirebaseAdapter);
             }
 
@@ -122,8 +104,6 @@ public class ChatsFragment extends Fragment {
 
             }
         });
-
     }
-
-
 }
+

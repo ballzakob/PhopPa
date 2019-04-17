@@ -46,7 +46,7 @@ public class UserFirebaseAdapter extends RecyclerView.Adapter<UserFirebaseAdapte
     public void onBindViewHolder(@NonNull final UserFirebaseViewHolder userFirebaseViewHolder, int i) {
         final UserFirebase userFirebase = userList.get(i);
 
-//        userFirebaseViewHolder.textViewUsername.setText(userFirebase.getUsername());
+        userFirebaseViewHolder.textViewUsername.setText(userFirebase.getUsername());
 
         Call<UserResponse> call = RetrofitClient.getInstance().getApi().getUser(userFirebase.getUsername());
         call.enqueue(new Callback<UserResponse>() {

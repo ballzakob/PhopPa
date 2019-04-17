@@ -28,31 +28,15 @@ public class NotificationFragment extends Fragment {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
-    private TextView textView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+//        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-        textView = v.findViewById(R.id.textView);
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                UserFirebase userFirebase = dataSnapshot.getValue(UserFirebase.class);
-                textView.setText("ยินดีต้อนรับ "+ userFirebase.getUsername());
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         final ViewPager viewPager = v.findViewById(R.id.pager);
         TabLayout tablayout = v.findViewById(R.id.tablayout);

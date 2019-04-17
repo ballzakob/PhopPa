@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
         recyclerView = v.findViewById(R.id.recyclerView_home);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
 

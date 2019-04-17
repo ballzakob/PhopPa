@@ -69,6 +69,7 @@ public class MessagesActivity extends AppCompatActivity implements View.OnClickL
         textViewUsername = findViewById(R.id.textViewUsername);
         editTextSend = findViewById(R.id.editTextSend);
 
+
         String email = getIntent().getStringExtra("email");
         Call<UserResponse> call = RetrofitClient.getInstance().getApi().getUser(email);
         call.enqueue(new Callback<UserResponse>() {
@@ -118,7 +119,7 @@ public class MessagesActivity extends AppCompatActivity implements View.OnClickL
 //                else{
 //                    Picasso.get().load(userFirebase.getImagerUrl()).into(circleImageViewUser);
 //                }
-                readMessages(firebaseUser.getUid(), userid, userFirebase.getImagerUrl());
+                readMessages(firebaseUser.getUid(), userid, userFirebase.getUsername());
 
             }
 
@@ -133,7 +134,7 @@ public class MessagesActivity extends AppCompatActivity implements View.OnClickL
     public void sendMessage(){
 
         String sender = firebaseUser.getUid();
-        String receiver = getIntent().getStringExtra("userid");
+        final String receiver = getIntent().getStringExtra("userid");
         String message = editTextSend.getText().toString();
 
         if(!message.equals("")){
@@ -146,6 +147,24 @@ public class MessagesActivity extends AppCompatActivity implements View.OnClickL
             hashMap.put("message", message);
 
             reference.child("Chats").push().setValue(hashMap);
+
+            final DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chatlist")
+                    .child(firebaseUser.getUid())
+                    .child(receiver);
+
+            chatRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.exists()){
+                        chatRef.child("id").setValue(receiver);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }else{
             Toast.makeText(MessagesActivity.this, "ยังไม่ได้พิมพ์ข้อความ", Toast.LENGTH_SHORT).show();
         }

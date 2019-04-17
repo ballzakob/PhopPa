@@ -5,13 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Chat Fragment"
-        android:textSize="30sp" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_home"
