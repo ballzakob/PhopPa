@@ -41,11 +41,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EventActivity extends AppCompatActivity implements View.OnClickListener,OnMapReadyCallback {
+public class EventActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
-    private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
-            textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent ,textViewEventLocationName
-            , textViewEventAddress ,textViewNumberPeople , textViewShowText, textViewEventPrice;
+    private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax,
+            textViewEventDateStart, textViewEventDateEnd, textViewEventTimeStart,
+            textViewEventTimeEnd, textViewEventGender, textViewNameOwnerEvent,
+            textViewEventLocationName, textViewEventAddress, textViewNumberPeople, textViewShowText,
+            textViewEventPrice;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -53,8 +55,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private GoogleMap mMap;
     private MapView mapView;
     private CircleImageView circleImageViewOwnerEvent;
-    private int countJoint=0;
-    private int countMax=0;
+    private int countJoint = 0;
+    private int countMax = 0;
     private Button buttonSignUp;
 
     private RecyclerView recyclerView;
@@ -70,13 +72,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 //        findViewById(R.id.buttonSignUp).setOnClickListener(this);
 
 
-
-
         textViewEventTitle = findViewById(R.id.textViewEventTitle);
         textViewEventDetail = findViewById(R.id.textViewEventDetail);
         textViewNumberPeopleMax = findViewById(R.id.textViewNumberPeopleMax);
         textViewEventDateStart = findViewById(R.id.textViewEventDateStart);
         textViewEventDateEnd = findViewById(R.id.textViewEventDateEnd);
+        textViewEventTimeStart = findViewById(R.id.textViewEventTimeStart);
+        textViewEventTimeEnd = findViewById(R.id.textViewEventTimeEnd);
         textViewEventGender = findViewById(R.id.textViewEventGender);
         textViewNameOwnerEvent = findViewById(R.id.textViewNameOwnerEvent);
         circleImageViewOwnerEvent = findViewById(R.id.circleImageViewOwnerEvent);
@@ -95,11 +97,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         String event_number_people = getIntent().getExtras().getString("event_number_people");
         String event_date_start = getIntent().getExtras().getString("event_date_start");
         String event_date_end = getIntent().getExtras().getString("event_date_end");
+        String event_time_start = getIntent().getExtras().getString("event_time_start");
+        String event_time_end = getIntent().getExtras().getString("event_time_end");
         String event_location_name = getIntent().getExtras().getString("event_location_name");
         String event_location_address = getIntent().getExtras().getString("event_location_address");
         String gender = getIntent().getExtras().getString("event_gender");
         String price = getIntent().getExtras().getString("event_price");
-        countMax = Integer.valueOf( event_number_people);
+        countMax = Integer.valueOf(event_number_people);
 
         String picture = getIntent().getExtras().getString("event_image");
         if (picture.isEmpty()) {
@@ -113,8 +117,10 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         textViewEventTitle.setText(event_title);
         textViewEventDetail.setText(event_detail);
         textViewNumberPeopleMax.setText(event_number_people);
-        textViewEventDateStart.setText(event_date_start);
-        textViewEventDateEnd.setText(event_date_end);
+        textViewEventDateStart.setText(splitDate(event_date_start));
+        textViewEventDateEnd.setText(splitDate(event_date_end));
+        textViewEventTimeStart.setText(splitTime(event_time_start));
+        textViewEventTimeEnd.setText(splitTime(event_time_end));
 
         textViewEventLocationName.setText(event_location_name);
         textViewEventAddress.setText(event_location_address);
@@ -141,8 +147,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         mapView.getMapAsync(this);
 
         String email = getIntent().getExtras().getString("email");
-        System.out.println("email : "+getIntent().getExtras().getString("email"));
+        System.out.println("email : " + getIntent().getExtras().getString("email"));
 
+        // เปลี่ยรูป โดยดึง email จาก ดรพำ
         Call<UserResponse> call = RetrofitClient.getInstance().getApi().getUser(email);
         call.enqueue(new Callback<UserResponse>() {
             @Override
@@ -176,28 +183,27 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         });
 
         Call<JoinResponse> call2 = RetrofitClient.getInstance().getApi().getJoinEventCount(event_id);
-        System.out.println("event_id : " +event_id);
+        System.out.println("event_id : " + event_id);
         call2.enqueue(new Callback<JoinResponse>() {
             @Override
             public void onResponse(Call<JoinResponse> call, Response<JoinResponse> response) {
                 System.out.println(response.body().getMessages());
                 System.out.println(response.body().getUsers().size());
                 if (response.body().isStatus()) {
-                    if(response.body().getUsers().size()==0){
+                    if (response.body().getUsers().size() == 0) {
                         textViewShowText.setText("ยังไม่มีคนเข้าร่วมกิจกรรม");
-                    }
-                    else {
+                    } else {
                         System.out.println(response.body().getUsers());
-                        userList =response.body().getUsers();
-                        adapter = new UserJoinAdapter(EventActivity.this,userList);
+                        userList = response.body().getUsers();
+                        adapter = new UserJoinAdapter(EventActivity.this, userList);
                         recyclerView.setAdapter(adapter);
                     }
 
-                    countJoint= response.body().getUsers().size();
-                    String count= String.valueOf(response.body().getUsers().size());
+                    countJoint = response.body().getUsers().size();
+                    String count = String.valueOf(response.body().getUsers().size());
                     System.out.println(count);
                     textViewNumberPeople.setText(count);
-                }else{
+                } else {
                 }
             }
 
@@ -207,7 +213,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         recyclerView = findViewById(R.id.recyclerView_home);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         buttonSignUp = findViewById(R.id.buttonSignUp);
 
@@ -222,32 +228,30 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
 
 
-
-
                 if (response.body().isStatus()) {
 
-                    if(response.body().getStatus_event().equals("wait")){
+                    if (response.body().getStatus_event().equals("wait")) {
 
-                        Drawable img = EventActivity.this.getResources().getDrawable( R.drawable.ic_wait_white );
-                        buttonSignUp.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                        buttonSignUp.setBackground(EventActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
+                        Drawable img = EventActivity.this.getResources().getDrawable(R.drawable.ic_wait_white);
+                        buttonSignUp.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                        buttonSignUp.setBackground(EventActivity.this.getResources().getDrawable(R.drawable.background_button_dont_click));
                         buttonSignUp.setTextColor(Color.parseColor("#80FFFFFF"));
                         buttonSignUp.setText(" กำลังตรวจสอบการยืนยันตัวตน");
 
 
-                    }else if(response.body().getStatus_event().equals("no")){
+                    } else if (response.body().getStatus_event().equals("no")) {
 
                         buttonSignUp.setText("กรุณายืนยันตัวตนก่อนเข้าร่วม");
                         buttonSignUp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(EventActivity.this,ConfirmIdentityActivity.class);
+                                Intent i = new Intent(EventActivity.this, ConfirmIdentityActivity.class);
                                 startActivity(i);
                                 finish();
                             }
                         });
 
-                    }else{
+                    } else {
                         // เมื่อกดปุ่ม buttonCreateEvent
                         buttonSignUp.setText("เข้าร่วมกิจกรรม");
                         buttonSignUp.setOnClickListener(new View.OnClickListener() {
@@ -266,27 +270,66 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             }
         });
-
-
     }
-    public boolean validateCountPeople(){
-        if(countJoint < countMax){
+
+    public String splitDate(String date) {
+        String[] arrDate = date.split("-");
+        String day = arrDate[2];
+        String mount = "";
+        int year = Integer.valueOf(arrDate[0])+543;
+        if (arrDate[1].equals("01")) {
+            mount = " ม.ค. ";
+        } else if (arrDate[1].equals("02")) {
+            mount = " ก.พ. ";
+        } else if (arrDate[1].equals("03")) {
+            mount = " มี.ค. ";
+        } else if (arrDate[1].equals("04")) {
+            mount = " เม.ย. ";
+        } else if (arrDate[1].equals("05")) {
+            mount = " พ.ค. ";
+        } else if (arrDate[1].equals("06")) {
+            mount = " มิ.ย. ";
+        } else if (arrDate[1].equals("07")) {
+            mount = " ก.ค. ";
+        } else if (arrDate[1].equals("08")) {
+            mount = " ส.ค. ";
+        } else if (arrDate[1].equals("09")) {
+            mount = " ก.ย. ";
+        } else if (arrDate[1].equals("10")) {
+            mount = " ต.ค. ";
+        } else if (arrDate[1].equals("11")) {
+            mount = " พ.ย. ";
+        } else {
+            mount = " ธ.ค. ";
+        }
+        return day+mount+String.valueOf(year);
+    }
+
+    public String splitTime(String time) {
+        String[] arrTime = time.split(":");
+        String hour = arrTime[0];
+        String minute = arrTime[1];
+        return hour+":"+minute+" น.";
+    }
+
+    public boolean validateCountPeople() {
+        if (countJoint < countMax) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public void sendData(){
+    public void sendData() {
         String event_id = getIntent().getExtras().getString("event_id");
         String email = SharedPrefManager.getInstance(this).getUser().getEmail();
-        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().jointEvent(event_id,email);
+        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().jointEvent(event_id, email);
         call.enqueue(new Callback<DefaultResponse>() {
             @Override
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                 if (response.body().isStatus()) {
                     Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -297,13 +340,14 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-    public void validateError(){
-        if(validateCountPeople()){
+
+    public void validateError() {
+        if (validateCountPeople()) {
             sendData();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
-        }else{
+        } else {
             Toast.makeText(EventActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
         }
 
@@ -354,21 +398,25 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         super.onStop();
         mapView.onStop();
     }
+
     @Override
     protected void onPause() {
         mapView.onPause();
         super.onPause();
     }
+
     @Override
     protected void onDestroy() {
         mapView.onDestroy();
         super.onDestroy();
     }
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -382,8 +430,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         uiSettings.setCompassEnabled(true);
         uiSettings.setZoomControlsEnabled(true);
 
-        String event_latitude =getIntent().getExtras().getString("event_latitude");
-        String event_longitude =getIntent().getExtras().getString("event_longitude");
+        String event_latitude = getIntent().getExtras().getString("event_latitude");
+        String event_longitude = getIntent().getExtras().getString("event_longitude");
 
         LatLng ny = new LatLng(Double.parseDouble(event_latitude), Double.parseDouble(event_longitude));
 

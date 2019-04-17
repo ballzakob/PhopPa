@@ -38,8 +38,9 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
 
         Event event = eventList.get(i);
 
-        eventViewHolder.textViewEventTitle.setText(event.getEvent_title());
-        eventViewHolder.textViewEventDetail.setText(event.getEvent_detail());
+        eventViewHolder.textViewEventTitle.setText(cutString(event.getEvent_title()));
+        eventViewHolder.textViewEventDetail.setText(cutString(event.getEvent_detail()));
+        eventViewHolder.textViewEventDateStart.setText(splitDate(event.getEvent_date_start()));
 
         String picture = event.getEvent_image();
         System.out.println(picture);
@@ -61,7 +62,7 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
 
     class EventViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textViewEventTitle, textViewEventDetail;
+        TextView textViewEventTitle, textViewEventDetail, textViewEventDateStart;
         ImageView imageViewEvent;
 
         public EventViewHolder(View itemView){
@@ -69,11 +70,54 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
 
             textViewEventTitle = itemView.findViewById(R.id.textViewEventTitle);
             textViewEventDetail = itemView.findViewById(R.id.textViewEventDetail);
+            textViewEventDateStart = itemView.findViewById(R.id.textViewEventDateStart);
             imageViewEvent = itemView.findViewById(R.id.imageViewEvent);
 
 
         }
 
     }
+
+    public String cutString(String detail){
+        if(detail.length() >16){
+            return detail.substring(0,14)+"...";
+        }else{
+            return detail;
+        }
+    }
+
+    public String splitDate(String date) {
+        String[] arrDate = date.split("-");
+        String day = arrDate[2];
+        String mount = "";
+        int year = Integer.valueOf(arrDate[0])+543;
+        if (arrDate[1].equals("01")) {
+            mount = " ม.ค. ";
+        } else if (arrDate[1].equals("02")) {
+            mount = " ก.พ. ";
+        } else if (arrDate[1].equals("03")) {
+            mount = " มี.ค. ";
+        } else if (arrDate[1].equals("04")) {
+            mount = " เม.ย. ";
+        } else if (arrDate[1].equals("05")) {
+            mount = " พ.ค. ";
+        } else if (arrDate[1].equals("06")) {
+            mount = " มิ.ย. ";
+        } else if (arrDate[1].equals("07")) {
+            mount = " ก.ค. ";
+        } else if (arrDate[1].equals("08")) {
+            mount = " ส.ค. ";
+        } else if (arrDate[1].equals("09")) {
+            mount = " ก.ย. ";
+        } else if (arrDate[1].equals("10")) {
+            mount = " ต.ค. ";
+        } else if (arrDate[1].equals("11")) {
+            mount = " พ.ย. ";
+        } else {
+            mount = " ธ.ค. ";
+        }
+        return day+mount;
+    }
+
 
 }

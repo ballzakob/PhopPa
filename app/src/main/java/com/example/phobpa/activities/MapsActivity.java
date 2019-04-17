@@ -15,6 +15,8 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.phobpa.R;
@@ -43,10 +45,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Double Latitude_current = 0.0;
     private Double Longitude_current = 0.0;
     private List<Event> eventList;
+    Button button_back_home;
 
     private static final int REQUEST_LOCATION = 1;
 
-    private ViewPager viewPager;
 
 
     @Override
@@ -57,6 +59,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        button_back_home = findViewById(R.id.button_back_home);
+        button_back_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

@@ -126,6 +126,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     }
                 });
                 Intent intent = new Intent(EditProfileActivity.this, SettingsActivity.class);
+                getIntent().removeExtra("key");
                 startActivity(intent);
                 finish();
             }

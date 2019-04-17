@@ -14,12 +14,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.phobpa.R;
@@ -51,7 +53,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private List<Event> eventList;
 
     private CircleImageView circleImageView_profile;
-    private Button button_messages;
+    private ImageButton button_messages;
 
     private LocationManager locationManager;
     private Double Latitude_current = 0.0;
@@ -68,22 +70,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
         v.findViewById(R.id.buttonCreateEvent).setOnClickListener(this);
-        v.findViewById(R.id.button_messages).setOnClickListener(this);
+//        v.findViewById(R.id.button_messages).setOnClickListener(this);
         v.findViewById(R.id.buttonMap).setOnClickListener(this);
 
 
         recyclerView = v.findViewById(R.id.recyclerView_home);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
 
-        button_messages = v.findViewById(R.id.button_messages);
-        button_messages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), MessagesActivity.class);
-                startActivity(i);
-            }
-        });
+//        button_messages = v.findViewById(R.id.button_messages);
+//        button_messages.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(getContext(), MessagesActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
@@ -123,13 +125,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 //                        Toast.makeText(getContext(), eventList.get(position).getEvent_title(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(getContext(), EventActivity.class);
-
                         intent.putExtra("event_id",eventList.get(position).getEvent_id());
                         intent.putExtra("email",eventList.get(position).getEmail());
                         intent.putExtra("event_title",eventList.get(position).getEvent_title());
                         intent.putExtra("event_detail",eventList.get(position).getEvent_detail());
                         intent.putExtra("event_date_start",eventList.get(position).getEvent_date_start());
                         intent.putExtra("event_date_end",eventList.get(position).getEvent_date_end());
+                        intent.putExtra("event_time_start",eventList.get(position).getEvent_time_start());
+                        intent.putExtra("event_time_end",eventList.get(position).getEvent_time_end());
                         intent.putExtra("event_number_people",eventList.get(position).getEvent_number_people());
                         intent.putExtra("event_gender",eventList.get(position).getEvent_gender());
                         intent.putExtra("event_types",eventList.get(position).getEvent_types());

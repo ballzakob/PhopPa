@@ -1,6 +1,7 @@
 package com.example.phobpa.activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -12,6 +13,11 @@ import com.example.phobpa.R;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsUsers.LoginResponse;
 import com.example.phobpa.storage.SharedPrefManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,6 +29,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editTextEmail;
     private EditText editTextPassword;
 
+    FirebaseAuth auth;
+    FirebaseUser firebaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
+
+        auth = FirebaseAuth.getInstance();
 
         findViewById(R.id.buttonLogin).setOnClickListener(this);
         findViewById(R.id.textViewRegister).setOnClickListener(this);
@@ -39,7 +50,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
 
-        if (SharedPrefManager.getInstance(this).isLoggedIN()) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (SharedPrefManager.getInstance(this).isLoggedIN() || firebaseUser != null) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -48,8 +61,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void userLogin() {
 
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
 
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required");
@@ -81,20 +94,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                LoginResponse loginResponse = response.body();
+                final LoginResponse loginResponse = response.body();
 
                 if (loginResponse.isStatus()) {
+
+
                     System.out.println(response.body().isStatus());
                     System.out.println(response.body().getMessages());
                     System.out.println(loginResponse.getUser().getEmail());
                     Toast.makeText(LoginActivity.this, loginResponse.getMessages(), Toast.LENGTH_LONG).show();
 
-                    SharedPrefManager.getInstance(LoginActivity.this)
-                            .saveUser(loginResponse.getUser());
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+
+
+                    auth.signInWithEmailAndPassword(email,password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    SharedPrefManager.getInstance(LoginActivity.this)
+                                            .saveUser(loginResponse.getUser());
+
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
+                            });
+
+
 
 
                 } else {
@@ -104,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "User created fail", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "ไม่ได้เชื่อมต่ออินเทอร์เน็ต", Toast.LENGTH_LONG).show();
             }
         });
 

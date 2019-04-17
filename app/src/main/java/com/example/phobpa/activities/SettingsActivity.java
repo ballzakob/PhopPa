@@ -17,6 +17,7 @@ import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.modelsUsers.StatusResponse;
 import com.example.phobpa.storage.SharedPrefManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -120,10 +121,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         builder.setMessage("คุณแน่ใจหรือไม่ว่าคุณต้องการออกจากระบบ");
         builder.setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+
+                FirebaseAuth.getInstance().signOut();
+
                 SharedPrefManager.getInstance(SettingsActivity.this).clear();
                 Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                SharedPrefManager.getInstance(SettingsActivity.this).clear();
             }
         });
         builder.setNegativeButton("ไม่", new DialogInterface.OnClickListener() {
@@ -132,7 +137,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         });
         builder.show();
-        SharedPrefManager.getInstance(this).clear();
     }
 
 //    private void deleteUser() {
@@ -189,6 +193,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         intent.putExtra("image_user",SharedPrefManager.getInstance(this).getUser().getImage_user());
 
         startActivity(intent);
+        getIntent().removeExtra("key");
         finish();
     }
 

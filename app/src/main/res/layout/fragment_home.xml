@@ -29,7 +29,7 @@
             android:src="@drawable/ic_account" />
 
 
-        <Button
+        <ImageButton
             android:id="@+id/button_messages"
             android:layout_width="30dp"
             android:layout_height="30dp"

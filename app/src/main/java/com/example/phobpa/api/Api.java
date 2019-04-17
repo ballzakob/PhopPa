@@ -48,6 +48,8 @@ public interface Api {
             @Field("event_detail") String event_detail,
             @Field("event_date_start") String event_date_start,
             @Field("event_date_end") String event_date_end,
+            @Field("event_time_start") String event_time_start,
+            @Field("event_time_end") String event_time_end,
             @Field("event_number_people") String event_number_people,
             @Field("event_gender") String event_gender,
             @Field("event_types") String event_types,

@@ -215,7 +215,7 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
     public void buttonSignUp(){
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(EventJoinActivity.this);
-        builder.setMessage("ท่านต้องการยกเลิกการเข้าร่วมกิจกรรมใช่หรือไม่ ?");
+        builder.setMessage("คุณต้องการยกเลิกการเข้าร่วมกิจกรรมหรือไม่ ?");
         builder.setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 

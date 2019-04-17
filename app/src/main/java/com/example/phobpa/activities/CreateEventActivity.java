@@ -656,26 +656,10 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                     } else {
                         gender = "m";
                     }
-
-                    String event_date_start = dateStart + " " + timeStart;
-                    String event_date_end = dateEnd + " " + timeEnd;
-
-                    System.out.println("email : " + email);
-                    System.out.println("event_title : " + title);
-                    System.out.println("event_detail : " + detial);
-                    System.out.println("event_date_start : " + dateStart + " " + timeStart);
-                    System.out.println("event_date_end : " + dateEnd + " " + timeEnd);
-                    System.out.println("event_number_people : " + nemberPeople);
-                    System.out.println("event_gender : " + gender);
-                    System.out.println("event_types : " + types);
-                    System.out.println("event_location_name : " + name_event);
-                    System.out.println("event_latitude : " + latitude_event);
-                    System.out.println("event_longitude : " + longitude_event);
-                    System.out.println("event_image : "+image_event);
                     Call<DefaultResponse> call = RetrofitClient
                             .getInstance()
                             .getApi()
-                            .createEvent(email, title, detial,event_date_start,event_date_end,nemberPeople,
+                            .createEvent(email, title, detial,dateStart,dateEnd,timeStart,timeEnd,nemberPeople,
                                     gender, types, price, name_event, address_event, latitude_event,
                                     longitude_event, image_event);
                     call.enqueue(new Callback<DefaultResponse>() {
@@ -683,6 +667,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                         public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                             if (response.body().isStatus()) {
                                 Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                                Intent i = new Intent(CreateEventActivity.this , MainActivity.class);
+                                startActivity(i);
                                 finish();
                             } else {
                                 Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
@@ -724,8 +710,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
             Intent CropIntent = new Intent("com.android.camera.action.CROP");
             CropIntent.setDataAndType(uri, "image/*");
             CropIntent.putExtra("crop", "true");
-            CropIntent.putExtra("outputX", 180);
-            CropIntent.putExtra("outputY", 180);
+            CropIntent.putExtra("outputX", 360);
+            CropIntent.putExtra("outputY", 360);
             CropIntent.putExtra("aspectX", 4);
             CropIntent.putExtra("aspectY", 4);
             CropIntent.putExtra("scaleUpIfNeeded", true);

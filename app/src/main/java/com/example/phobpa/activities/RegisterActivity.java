@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -28,9 +29,18 @@ import android.widget.Toast;
 import com.example.phobpa.R;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsUsers.DefaultResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -40,7 +50,6 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ProgressDialog dialog;
 
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
@@ -65,6 +74,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     CircleImageView CircleImageViewProfile;
     private TextView textViewBirthday;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
+
+    FirebaseAuth auth;
+    DatabaseReference reference;
 
 
     @Override
@@ -91,6 +103,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.button_back_login).setOnClickListener(this);
         findViewById(R.id.textViewEdit).setOnClickListener(this);
         findViewById(R.id.textViewBirthdayRG).setOnClickListener(this);
+
+        auth = FirebaseAuth.getInstance();
 
         textInputEmail.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -359,17 +373,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public boolean validationError(){
-        if(!validateEmail() || !validatePassword() || !validateConfirmPassword() || !validateFirstname()
-                || !validateLastname() || !validateTelephone() || !validateBD() || image_user.equals("")){
+    public boolean validationError() {
+        if (!validateEmail() || !validatePassword() || !validateConfirmPassword() || !validateFirstname()
+                || !validateLastname() || !validateTelephone() || !validateBD() || image_user.equals("")) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     private void userSignUp() {
-        System.out.println("รูป : "+ image_user);
+        System.out.println("รูป : " + image_user);
         if (!validationError()) {
             Toast.makeText(this, "กรอกข้อมูลไม่ครบ", Toast.LENGTH_LONG).show();
             return;
@@ -382,7 +396,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 public void onClick(DialogInterface dialog, int id) {
                     String email = textInputEmail.getEditText().getText().toString().trim();
                     String password = textInputPassword.getEditText().getText().toString().trim();
-                    String firstname = textInputFirstname.getEditText().getText().toString().trim();
+                    final String firstname = textInputFirstname.getEditText().getText().toString().trim();
                     String lastname = textInputLastname.getEditText().getText().toString().trim();
                     int radioId = radioGroup.getCheckedRadioButtonId();
                     radioButton = findViewById(radioId);
@@ -395,10 +409,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     String birthday = textViewBirthday.getText().toString().trim();
                     String telephone = textInputTelephone.getEditText().getText().toString().trim();
 
-                    System.out.println("รูป : "+ image_user);
+                    System.out.println("รูป : " + image_user);
 
                     create_user_php(email, password, firstname, lastname, gender, birthday, telephone, image_user);
-//                finish();
+
+
                 }
             });
             builder.setNegativeButton("ไม่ยืนยัน", new DialogInterface.OnClickListener() {
@@ -413,7 +428,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void create_user_php(String email, String password, String firstname, String lastname, String gender,
+    private void create_user_php(final String email, final String password, String firstname, String lastname, String gender,
                                  String birthday, String telephone, String image_user) {
         Call<DefaultResponse> call = RetrofitClient
                 .getInstance()
@@ -425,6 +440,33 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                 if (response.body().isStatus()) {
                     Toast.makeText(RegisterActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                    auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                                        String userid = firebaseUser.getUid();
+
+                                        reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+
+                                        HashMap<String, String> hashMap = new HashMap<>();
+                                        hashMap.put("id", userid);
+                                        hashMap.put("username", email);
+                                        hashMap.put("imagerUrl", "defult");
+
+                                        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this, "กรอกข้อมูลผิดพลาด", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                    finish();
                 } else {
                     Toast.makeText(RegisterActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
                 }

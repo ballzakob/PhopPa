@@ -18,8 +18,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:background="@drawable/background_white"
+            android:orientation="vertical"
             android:padding="10dp">
 
 
@@ -35,55 +35,85 @@
                     android:layout_gravity="center"
                     android:scaleType="fitXY"
                     android:src="@drawable/shabu" />
+
                 <LinearLayout
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="#72000000">
-                    <ImageView
+                    android:background="#72000000"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="4dp"
-                        android:background="@drawable/ic_date_white"/>
-                    <TextView
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/ic_date_white" />
+
+                        <TextView
+                            android:id="@+id/textViewEventDateStart"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="วันที่"
+                            android:textSize="12dp"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="dsfdsfdsffdsfdfssfsdfsd"
-                        android:textColor="@color/white"/>
+                        android:layout_height="5dp" />
+
+
                 </LinearLayout>
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <TextView
                 android:id="@+id/textViewEventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
                 android:text="Event Title"
-                android:textSize="12dp"
                 android:textColor="@color/white"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+                android:textSize="15dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
 
             <LinearLayout
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/location_black"
-                    android:layout_gravity="center"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_assignment_black" />
+
                 <TextView
                     android:id="@+id/textViewEventDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Event Detail"
-                    android:textSize="12dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textSize="12dp" />
             </LinearLayout>
 
 

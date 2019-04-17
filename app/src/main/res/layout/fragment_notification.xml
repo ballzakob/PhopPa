@@ -2,13 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Notification Fragment"
+        android:text="Chat Fragment"
         android:textSize="30sp" />
 
     <android.support.v7.widget.Toolbar
@@ -22,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="การแจ้งเตือน"
+            android:text="การสนทนา"
             android:textColor="#ffffff"
             android:textSize="18dp" />
 
@@ -35,5 +37,30 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/ic_message_white_24dp" />
     </android.support.v7.widget.Toolbar>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tablayout"
+        app:tabTextColor="@color/white"
+        app:tabIndicatorColor="@color/white"
+        android:layout_below="@id/toolbar_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="แชท" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="เพื่อน" />
+    </android.support.design.widget.TabLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tablayout">
+
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

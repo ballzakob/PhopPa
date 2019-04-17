@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ public class Sub1Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_sub1, container, false);
         recyclerView = v.findViewById(R.id.recyclerView_home);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         // TODO: 2019-03-07  สร้าง layout มาโชว์
         recyclerView.addOnItemTouchListener(
@@ -73,6 +74,7 @@ public class Sub1Fragment extends Fragment {
                         intent.putExtra("event_latitude",eventList.get(position).getEvent_latitude());
                         intent.putExtra("event_longitude",eventList.get(position).getEvent_longitude());
                         intent.putExtra("event_image",eventList.get(position).getEvent_image());
+                        intent.hasExtra("DONE");
                         startActivity(intent);
                         // do whatever
                     }
@@ -87,7 +89,7 @@ public class Sub1Fragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Call<EventResponse> call = RetrofitClient.getInstance().getApi()
@@ -100,6 +102,10 @@ public class Sub1Fragment extends Fragment {
                 eventList =response.body().getEvents();
                 adapter = new EventMeAdapter( getActivity(),eventList);
                 recyclerView.setAdapter(adapter);
+                if(eventList.size() ==0){
+                    TextView textView = view.findViewById(R.id.textViewWord);
+                    textView.setText("ยังไม่มีการเข้าร่วมกิจกรรม");
+                }
 
 
             }
