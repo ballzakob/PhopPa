@@ -35,8 +35,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EventMeActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
+
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
-            textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent, textViewEventLocationName, textViewEventAddress, textViewNumberPeople, textViewShowText;
+            textViewEventDateEnd,textViewEventTimeStart, textViewEventTimeEnd,
+            textViewEventGender, textViewNameOwnerEvent, textViewEventLocationName,
+            textViewEventAddress, textViewNumberPeople, textViewShowText, textViewEventPrice;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -62,6 +65,8 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         textViewNumberPeopleMax = findViewById(R.id.textViewNumberPeopleMax);
         textViewEventDateStart = findViewById(R.id.textViewEventDateStart);
         textViewEventDateEnd = findViewById(R.id.textViewEventDateEnd);
+        textViewEventTimeStart = findViewById(R.id.textViewEventTimeStart);
+        textViewEventTimeEnd = findViewById(R.id.textViewEventTimeEnd);
         textViewEventGender = findViewById(R.id.textViewEventGender);
         textViewNameOwnerEvent = findViewById(R.id.textViewNameOwnerEvent);
         circleImageViewOwnerEvent = findViewById(R.id.circleImageViewOwnerEvent);
@@ -69,6 +74,7 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         textViewEventLocationName = findViewById(R.id.textViewEventLocationName);
         textViewNumberPeople = findViewById(R.id.textViewNumberPeople);
         textViewShowText = findViewById(R.id.textViewShowText);
+        textViewEventPrice = findViewById(R.id.textViewEventPrice);
 
 
         imageViewEvent = findViewById(R.id.imageViewEvent);
@@ -79,9 +85,12 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         String event_number_people = getIntent().getExtras().getString("event_number_people");
         String event_date_start = getIntent().getExtras().getString("event_date_start");
         String event_date_end = getIntent().getExtras().getString("event_date_end");
+        String event_time_start = getIntent().getExtras().getString("event_time_start");
+        String event_time_end = getIntent().getExtras().getString("event_time_end");
         String event_location_name = getIntent().getExtras().getString("event_location_name");
         String event_location_address = getIntent().getExtras().getString("event_location_address");
         String gender = getIntent().getExtras().getString("event_gender");
+        String price = getIntent().getExtras().getString("event_price");
         countMax = Integer.valueOf(event_number_people);
 
         String picture = getIntent().getExtras().getString("event_image");
@@ -96,11 +105,14 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         textViewEventTitle.setText(event_title);
         textViewEventDetail.setText(event_detail);
         textViewNumberPeopleMax.setText(event_number_people);
-        textViewEventDateStart.setText(event_date_start);
-        textViewEventDateEnd.setText(event_date_end);
+        textViewEventDateStart.setText(splitDate(event_date_start));
+        textViewEventDateEnd.setText(splitDate(event_date_end));
+        textViewEventTimeStart.setText(splitTime(event_time_start));
+        textViewEventTimeEnd.setText(splitTime(event_time_end));
 
         textViewEventLocationName.setText(event_location_name);
         textViewEventAddress.setText(event_location_address);
+        textViewEventPrice.setText(price);
 
 
         System.out.println(gender);
@@ -191,6 +203,46 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
+    }
+
+    public String splitDate(String date) {
+        String[] arrDate = date.split("-");
+        String day = arrDate[2];
+        String mount = "";
+        int year = Integer.valueOf(arrDate[0])+543;
+        if (arrDate[1].equals("01")) {
+            mount = " ม.ค. ";
+        } else if (arrDate[1].equals("02")) {
+            mount = " ก.พ. ";
+        } else if (arrDate[1].equals("03")) {
+            mount = " มี.ค. ";
+        } else if (arrDate[1].equals("04")) {
+            mount = " เม.ย. ";
+        } else if (arrDate[1].equals("05")) {
+            mount = " พ.ค. ";
+        } else if (arrDate[1].equals("06")) {
+            mount = " มิ.ย. ";
+        } else if (arrDate[1].equals("07")) {
+            mount = " ก.ค. ";
+        } else if (arrDate[1].equals("08")) {
+            mount = " ส.ค. ";
+        } else if (arrDate[1].equals("09")) {
+            mount = " ก.ย. ";
+        } else if (arrDate[1].equals("10")) {
+            mount = " ต.ค. ";
+        } else if (arrDate[1].equals("11")) {
+            mount = " พ.ย. ";
+        } else {
+            mount = " ธ.ค. ";
+        }
+        return day+mount+String.valueOf(year);
+    }
+
+    public String splitTime(String time) {
+        String[] arrTime = time.split(":");
+        String hour = arrTime[0];
+        String minute = arrTime[1];
+        return hour+":"+minute+" น.";
     }
 
     public boolean validateCountPeople() {

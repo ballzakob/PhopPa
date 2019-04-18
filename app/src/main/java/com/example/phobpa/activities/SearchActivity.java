@@ -1,28 +1,24 @@
-package com.example.phobpa.fragment;
-
+package com.example.phobpa.activities;
 
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cielyang.android.clearableedittext.ClearableEditText;
 import com.example.phobpa.R;
 import com.example.phobpa.RecyclerItemClickListener;
-import com.example.phobpa.activities.EventActivity;
-import com.example.phobpa.activities.EventMeActivity;
 import com.example.phobpa.adapter.EventMeAdapter;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsEvents.Event;
 import com.example.phobpa.modelsEvents.EventResponse;
 import com.example.phobpa.storage.SharedPrefManager;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -30,32 +26,60 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class Sub2Fragment extends Fragment {
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private ClearableEditText editText_search;
+    private TextView textViewWord;
 
     private RecyclerView recyclerView;
     private EventMeAdapter adapter;
     private List<Event> eventList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_sub1, container, false);
-        recyclerView = v.findViewById(R.id.recyclerView_home);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
 
-        // TODO: 2019-03-07  สร้าง layout มาโชว์
+        findViewById(R.id.button_search).setOnClickListener(this);
+        findViewById(R.id.buttonBack).setOnClickListener(this);
+
+        editText_search = findViewById(R.id.editText_search);
+        textViewWord = findViewById(R.id.textViewWord);
+
+        String textSearch = getIntent().getExtras().getString("textSearch");
+        editText_search.setText(textSearch);
+        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                .searchEvent(SharedPrefManager.getInstance(this).getUser().getEmail(),textSearch);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this, 2));
+
+        call.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                eventList =response.body().getEvents();
+                adapter = new EventMeAdapter( SearchActivity.this,eventList);
+                recyclerView.setAdapter(adapter);
+
+                if (eventList.size()>0){
+                    textViewWord.setText("");
+                }
+
+
+            }
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) { }
+        });
+
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
 //                        Toast.makeText(getContext(), eventList.get(position).getEvent_title(), Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(getContext(), EventMeActivity.class);
-
+                        Intent intent = new Intent(SearchActivity.this, EventActivity.class);
                         intent.putExtra("event_id",eventList.get(position).getEvent_id());
                         intent.putExtra("email",eventList.get(position).getEmail());
                         intent.putExtra("event_title",eventList.get(position).getEvent_title());
@@ -79,28 +103,32 @@ public class Sub2Fragment extends Fragment {
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        String price=  eventList.get(position).getEvent_price();
+//                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, "รหัสกิจกรรม : "+eventList.get(position).getEvent_id(), Toast.LENGTH_SHORT).show();
                         // do whatever
                     }
                 })
         );
-        return v;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void searchText() {
 
+        String textSearch = editText_search.getText().toString();
         Call<EventResponse> call = RetrofitClient.getInstance().getApi()
-                .getEventMe(SharedPrefManager.getInstance(getContext()).getUser().getEmail());
+                .searchEvent(SharedPrefManager.getInstance(this).getUser().getEmail(),textSearch);
 
         call.enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
 
                 eventList =response.body().getEvents();
-                adapter = new EventMeAdapter( getActivity(),eventList);
+                adapter = new EventMeAdapter( SearchActivity.this,eventList);
                 recyclerView.setAdapter(adapter);
+
+                if (eventList.size()>0){
+                    textViewWord.setText("");
+                }
 
 
             }
@@ -108,4 +136,19 @@ public class Sub2Fragment extends Fragment {
             public void onFailure(Call<EventResponse> call, Throwable t) { }
         });
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_search:
+                searchText();
+                break;
+            case R.id.buttonBack:
+                finish();
+                break;
+
+        }
+    }
+
+
 }

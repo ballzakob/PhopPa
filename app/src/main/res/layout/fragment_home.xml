@@ -35,7 +35,7 @@
             android:layout_height="30dp"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/ic_message_white_24dp" />
+            android:background="@drawable/calculator" />
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout

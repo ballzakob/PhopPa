@@ -98,7 +98,7 @@ public class MessagesActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(MessagesActivity.this, "FAIL", Toast.LENGTH_LONG).show();
+                Toast.makeText(MessagesActivity.this, "ไม่มีอินเทอร์เน็ต", Toast.LENGTH_LONG).show();
             }
         });
 

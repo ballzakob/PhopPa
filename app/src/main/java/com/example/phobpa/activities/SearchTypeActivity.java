@@ -1,25 +1,16 @@
-package com.example.phobpa.fragment;
-
+package com.example.phobpa.activities;
 
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phobpa.R;
 import com.example.phobpa.RecyclerItemClickListener;
-import com.example.phobpa.activities.EventActivity;
-import com.example.phobpa.activities.EventJoinActivity;
-import com.example.phobpa.activities.EventMeActivity;
 import com.example.phobpa.adapter.EventMeAdapter;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsEvents.Event;
@@ -32,33 +23,61 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class Sub1Fragment extends Fragment {
-    TextView textView;
+public class SearchTypeActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private TextView textViewEventType;
+    private TextView textViewWord;
 
     private RecyclerView recyclerView;
     private EventMeAdapter adapter;
     private List<Event> eventList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_sub1, container, false);
-        recyclerView = v.findViewById(R.id.recyclerView_home);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search_type);
 
-        // TODO: 2019-03-07  สร้าง layout มาโชว์
+        findViewById(R.id.button_back).setOnClickListener(this);
+
+        String type = getIntent().getExtras().getString("event_types");
+
+        textViewEventType = findViewById(R.id.textViewEventType);
+        textViewWord = findViewById(R.id.textViewWord);
+
+        setType(type);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(SearchTypeActivity.this, 2));
+
+        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                .searchEventType(SharedPrefManager.getInstance(this).getUser().getEmail(),type);
+
+        call.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                eventList =response.body().getEvents();
+                adapter = new EventMeAdapter( SearchTypeActivity.this,eventList);
+                recyclerView.setAdapter(adapter);
+
+                if (eventList.size()>0){
+                    textViewWord.setText("");
+                }
+
+
+            }
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) { }
+        });
+
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
 //                        Toast.makeText(getContext(), eventList.get(position).getEvent_title(), Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(getContext(), EventJoinActivity.class);
-
+                        Intent intent = new Intent(SearchTypeActivity.this, EventActivity.class);
                         intent.putExtra("event_id",eventList.get(position).getEvent_id());
                         intent.putExtra("email",eventList.get(position).getEmail());
                         intent.putExtra("event_title",eventList.get(position).getEvent_title());
@@ -77,43 +96,54 @@ public class Sub1Fragment extends Fragment {
                         intent.putExtra("event_longitude",eventList.get(position).getEvent_longitude());
                         intent.putExtra("event_image",eventList.get(position).getEvent_image());
                         intent.putExtra("event_price",eventList.get(position).getEvent_price());
-                        intent.hasExtra("DONE");
                         startActivity(intent);
                         // do whatever
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        String price=  eventList.get(position).getEvent_price();
+//                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchTypeActivity.this, "รหัสกิจกรรม : "+eventList.get(position).getEvent_id(), Toast.LENGTH_SHORT).show();
                         // do whatever
                     }
                 })
         );
-        return v;
+
+    }
+
+    public void setType(String type){
+        if(type.equals("food")){
+
+            textViewEventType.setText("อาหาร");
+
+        }else if(type.equals("cosmetic")){
+
+            textViewEventType.setText("เครื่องสำอาง");
+
+        }else if(type.equals("fashion")){
+
+            textViewEventType.setText("แฟชั่น");
+
+        }else if(type.equals("sport")){
+
+            textViewEventType.setText("กีฬา");
+
+        }else if(type.equals("entertainment")){
+
+            textViewEventType.setText("บันเทิง");
+
+        }else if(type.equals("travel")){
+            textViewEventType.setText("ท่องเที่ยว");
+
+        }
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
-                .getEventMeJoin(SharedPrefManager.getInstance(getContext()).getUser().getEmail());
-
-        call.enqueue(new Callback<EventResponse>() {
-            @Override
-            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-
-                eventList =response.body().getEvents();
-                adapter = new EventMeAdapter( getActivity(),eventList);
-                recyclerView.setAdapter(adapter);
-                if(eventList.size() ==0){
-                    TextView textView = view.findViewById(R.id.textViewWord);
-                    textView.setText("ยังไม่มีการเข้าร่วมกิจกรรม");
-                }
-
-
-            }
-            @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) { }
-        });
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_back:
+                finish();
+                break;
+        }
     }
 }

@@ -27,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".activities.SearchActivity"></activity>
+        <activity android:name=".activities.SearchTypeActivity" />
         <activity android:name=".activities.EventJoinActivity" />
         <activity android:name=".activities.EventMeActivity" />
         <activity android:name=".activities.SelectTypeActivity" />
@@ -51,14 +52,12 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-
         <activity
             android:name=".activities.ConfirmIdentityActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CreateEventActivity"
             android:windowSoftInputMode="stateHidden" />
-
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SettingsActivity" />

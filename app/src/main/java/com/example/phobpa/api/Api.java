@@ -136,4 +136,18 @@ public interface Api {
     );
 
 
+    @FormUrlEncoded
+    @POST("searchEventType.php")
+    Call<EventResponse> searchEventType(
+            @Field("email") String email,
+            @Field("event_types") String event_types
+    );
+
+    @FormUrlEncoded
+    @POST("searchEvent.php")
+    Call<EventResponse> searchEvent(
+            @Field("email") String email,
+            @Field("search_query") String search_query
+    );
+
 }

@@ -13,7 +13,7 @@
 
 
         <Button
-            android:id="@+id/button_messages"
+            android:id="@+id/button_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -47,11 +47,11 @@
                         android:background="@drawable/ic_search_black_24dp" />
 
                     <com.cielyang.android.clearableedittext.ClearableEditText
-                        android:id="@+id/button_profile"
+                        android:id="@+id/editText_search"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:background="@null"
-                        android:hint="ค้นหา"
+                        android:hint="พิมพ์ข้อความ..."
                         android:imeOptions="actionSearch"
                         android:scrollHorizontally="true"
                         android:singleLine="true"

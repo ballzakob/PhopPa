@@ -282,22 +282,61 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textViewEventDateStart"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="วันเริ่มต้น" />
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="เริ่ม : " />
+                        <TextView
+                            android:id="@+id/textViewEventDateStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="วันเริ่มต้น" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=" เวลา : " />
+                        <TextView
+                            android:id="@+id/textViewEventTimeStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="เวลาเริ่มต้น" />
+
+                    </LinearLayout>
+
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="10dp" />
-
-                    <TextView
-                        android:id="@+id/textViewEventDateEnd"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="วันสิ้นสุด" />
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="สิ้นสุด : " />
+
+                        <TextView
+                            android:id="@+id/textViewEventDateEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="วันสิ้นสุด" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="  เวลา : " />
+                        <TextView
+                            android:id="@+id/textViewEventTimeEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="เวลาสิ้นสุด   " />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>

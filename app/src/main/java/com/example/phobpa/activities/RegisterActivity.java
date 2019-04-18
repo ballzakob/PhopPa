@@ -474,7 +474,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onFailure(Call<DefaultResponse> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "FAIL", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this, "ไม่มีอินเทอร์เน็ต", Toast.LENGTH_LONG).show();
             }
         });
     }

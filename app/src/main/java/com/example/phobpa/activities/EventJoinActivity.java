@@ -41,7 +41,8 @@ import retrofit2.Response;
 public class EventJoinActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
-            textViewEventDateEnd, textViewEventGender, textViewNameOwnerEvent, textViewEventLocationName,
+            textViewEventDateEnd,textViewEventTimeStart, textViewEventTimeEnd,
+            textViewEventGender, textViewNameOwnerEvent, textViewEventLocationName,
             textViewEventAddress, textViewNumberPeople, textViewShowText, textViewEventPrice;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -70,6 +71,8 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         textViewNumberPeopleMax = findViewById(R.id.textViewNumberPeopleMax);
         textViewEventDateStart = findViewById(R.id.textViewEventDateStart);
         textViewEventDateEnd = findViewById(R.id.textViewEventDateEnd);
+        textViewEventTimeStart = findViewById(R.id.textViewEventTimeStart);
+        textViewEventTimeEnd = findViewById(R.id.textViewEventTimeEnd);
         textViewEventGender = findViewById(R.id.textViewEventGender);
         textViewNameOwnerEvent = findViewById(R.id.textViewNameOwnerEvent);
         circleImageViewOwnerEvent = findViewById(R.id.circleImageViewOwnerEvent);
@@ -88,6 +91,8 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         String event_number_people = getIntent().getExtras().getString("event_number_people");
         String event_date_start = getIntent().getExtras().getString("event_date_start");
         String event_date_end = getIntent().getExtras().getString("event_date_end");
+        String event_time_start = getIntent().getExtras().getString("event_time_start");
+        String event_time_end = getIntent().getExtras().getString("event_time_end");
         String event_location_name = getIntent().getExtras().getString("event_location_name");
         String event_location_address = getIntent().getExtras().getString("event_location_address");
         String gender = getIntent().getExtras().getString("event_gender");
@@ -106,8 +111,10 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         textViewEventTitle.setText(event_title);
         textViewEventDetail.setText(event_detail);
         textViewNumberPeopleMax.setText(event_number_people);
-        textViewEventDateStart.setText(event_date_start);
-        textViewEventDateEnd.setText(event_date_end);
+        textViewEventDateStart.setText(splitDate(event_date_start));
+        textViewEventDateEnd.setText(splitDate(event_date_end));
+        textViewEventTimeStart.setText(splitTime(event_time_start));
+        textViewEventTimeEnd.setText(splitTime(event_time_end));
 
         textViewEventLocationName.setText(event_location_name);
         textViewEventAddress.setText(event_location_address);
@@ -202,6 +209,47 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
+    }
+
+
+    public String splitDate(String date) {
+        String[] arrDate = date.split("-");
+        String day = arrDate[2];
+        String mount = "";
+        int year = Integer.valueOf(arrDate[0])+543;
+        if (arrDate[1].equals("01")) {
+            mount = " ม.ค. ";
+        } else if (arrDate[1].equals("02")) {
+            mount = " ก.พ. ";
+        } else if (arrDate[1].equals("03")) {
+            mount = " มี.ค. ";
+        } else if (arrDate[1].equals("04")) {
+            mount = " เม.ย. ";
+        } else if (arrDate[1].equals("05")) {
+            mount = " พ.ค. ";
+        } else if (arrDate[1].equals("06")) {
+            mount = " มิ.ย. ";
+        } else if (arrDate[1].equals("07")) {
+            mount = " ก.ค. ";
+        } else if (arrDate[1].equals("08")) {
+            mount = " ส.ค. ";
+        } else if (arrDate[1].equals("09")) {
+            mount = " ก.ย. ";
+        } else if (arrDate[1].equals("10")) {
+            mount = " ต.ค. ";
+        } else if (arrDate[1].equals("11")) {
+            mount = " พ.ย. ";
+        } else {
+            mount = " ธ.ค. ";
+        }
+        return day+mount+String.valueOf(year);
+    }
+
+    public String splitTime(String time) {
+        String[] arrTime = time.split(":");
+        String hour = arrTime[0];
+        String minute = arrTime[1];
+        return hour+":"+minute+" น.";
     }
 
     public boolean validateCountPeople() {
