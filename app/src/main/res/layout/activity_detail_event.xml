@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.EventMeActivity">
+    tools:context=".activities.DetailEventActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
                 android:scaleType="fitXY"
-                android:src="@drawable/central_plaza_salaya" />
+                android:src="@drawable/none" />
 
             <View
                 android:layout_width="match_parent"
@@ -150,15 +150,18 @@
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="5dp" />
+
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:id="@+id/textViewShowText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true" />
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerView_home"
                         android:layout_width="match_parent"
@@ -187,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -198,28 +202,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="15dp"
-                    android:text="ราคา สินค้า/บริการ"
+                    android:text="ราคาสินค้าหรือบริการ"
                     android:textSize="24dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:paddingRight="15dp"
-                        android:src="@drawable/ic_money_black"/>
+                        android:src="@drawable/ic_money_black" />
+
                     <TextView
                         android:id="@+id/textViewEventPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
                         android:paddingRight="15dp"
+                        android:text="0"
                         android:textSize="18dp" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -227,10 +233,12 @@
                         android:textSize="18dp" />
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
@@ -239,6 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -280,23 +289,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="เริ่ม : " />
+
                         <TextView
                             android:id="@+id/textViewEventDateStart"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="วันเริ่มต้น" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=" เวลา : " />
+
                         <TextView
                             android:id="@+id/textViewEventTimeStart"
                             android:layout_width="match_parent"
@@ -309,10 +323,12 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="10dp" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -323,10 +339,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="วันสิ้นสุด" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="  เวลา : " />
+
                         <TextView
                             android:id="@+id/textViewEventTimeEnd"
                             android:layout_width="match_parent"
@@ -432,7 +450,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
+                android:layout_height="50dp"
                 android:background="@color/white" />
 
 
@@ -459,32 +477,6 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <com.dd.ShadowLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        app:sl_cornerRadius="15dp"
-        app:sl_dx="3dp"
-        app:sl_dy="5dp"
-        app:sl_shadowColor="#1D000000"
-        app:sl_shadowRadius="7dp">
-
-        <Button
-            android:id="@+id/buttonDeleteEvent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_delect_botton"
-            android:elevation="5dp"
-            android:paddingRight="50dp"
-            android:paddingLeft="50dp"
-            android:text="ลบกิจกรรมนี้"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-    </com.dd.ShadowLayout>
 
 
 </RelativeLayout>

@@ -122,8 +122,18 @@ public class ShowEventActivity extends AppCompatActivity {
                         intent.putExtra("event_detail",eventList.get(position).getEvent_detail());
                         intent.putExtra("event_date_start",eventList.get(position).getEvent_date_start());
                         intent.putExtra("event_date_end",eventList.get(position).getEvent_date_end());
+                        intent.putExtra("event_time_start",eventList.get(position).getEvent_time_start());
+                        intent.putExtra("event_time_end",eventList.get(position).getEvent_time_end());
                         intent.putExtra("event_number_people",eventList.get(position).getEvent_number_people());
                         intent.putExtra("event_gender",eventList.get(position).getEvent_gender());
+                        intent.putExtra("event_types",eventList.get(position).getEvent_types());
+                        intent.putExtra("event_price",eventList.get(position).getEvent_price());
+                        intent.putExtra("event_location_name",eventList.get(position).getEvent_location_name());
+                        intent.putExtra("event_location_address",eventList.get(position).getEvent_location_address());
+                        intent.putExtra("event_latitude",eventList.get(position).getEvent_latitude());
+                        intent.putExtra("event_longitude",eventList.get(position).getEvent_longitude());
+                        intent.putExtra("event_image",eventList.get(position).getEvent_image());
+                        intent.putExtra("event_price",eventList.get(position).getEvent_price());
                         startActivity(intent);
                         // do whatever
                     }
@@ -137,6 +147,27 @@ public class ShowEventActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String latitude = getIntent().getExtras().getString("event_latitude");
+        String longitude = getIntent().getExtras().getString("event_longitude");
+        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                .showEventNotMe(SharedPrefManager.getInstance(this).getUser().getEmail(),latitude,longitude,types);
 
-
+        call.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                if(response.body().isStatus()){
+                    eventList =response.body().getEvents();
+                    adapter = new ShowEventAdapter(ShowEventActivity.this,eventList);
+                    recyclerView.setAdapter(adapter);
+                }else{
+                    textView.setText("ไม่พบกิจกกรมที่คล้ายกัน");
+                }
+            }
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) { }
+        });
+    }
 }

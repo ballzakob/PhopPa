@@ -41,6 +41,7 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
         eventViewHolder.textViewEventTitle.setText(cutString(event.getEvent_title()));
         eventViewHolder.textViewEventDetail.setText(cutString(event.getEvent_detail()));
         eventViewHolder.textViewEventDateStart.setText(splitDate(event.getEvent_date_start()));
+        eventViewHolder.textViewNumberPeople.setText(event.getEvent_number_people());
 
         String picture = event.getEvent_image();
         System.out.println(picture);
@@ -62,7 +63,7 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
 
     class EventViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textViewEventTitle, textViewEventDetail, textViewEventDateStart;
+        TextView textViewEventTitle, textViewEventDetail, textViewEventDateStart , textViewNumberPeople;
         ImageView imageViewEvent;
 
         public EventViewHolder(View itemView){
@@ -71,6 +72,7 @@ public class EventMeAdapter extends RecyclerView.Adapter<EventMeAdapter.EventVie
             textViewEventTitle = itemView.findViewById(R.id.textViewEventTitle);
             textViewEventDetail = itemView.findViewById(R.id.textViewEventDetail);
             textViewEventDateStart = itemView.findViewById(R.id.textViewEventDateStart);
+            textViewNumberPeople = itemView.findViewById(R.id.textViewNumberPeople);
             imageViewEvent = itemView.findViewById(R.id.imageViewEvent);
 
 

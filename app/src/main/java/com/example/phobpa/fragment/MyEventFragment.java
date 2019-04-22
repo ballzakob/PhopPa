@@ -99,4 +99,16 @@ public class MyEventFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        String picture = SharedPrefManager.getInstance(getContext()).getUser().getImage_user();
+        System.out.println(picture);
+        if(picture.isEmpty()){
+            circleImageView_profile.setImageResource(R.drawable.user);
+        }else{
+            String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
+            Picasso.get().load(url).into(circleImageView_profile);
+        }
+    }
 }

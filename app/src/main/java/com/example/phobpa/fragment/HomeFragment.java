@@ -26,9 +26,11 @@ import android.widget.Toast;
 
 import com.example.phobpa.R;
 import com.example.phobpa.RecyclerItemClickListener;
+import com.example.phobpa.activities.CalculatorActivity;
 import com.example.phobpa.activities.EventActivity;
 import com.example.phobpa.activities.MapsActivity;
 import com.example.phobpa.activities.MessagesActivity;
+import com.example.phobpa.activities.PageCheckActivity;
 import com.example.phobpa.activities.SettingsActivity;
 import com.example.phobpa.activities.SelectTypeActivity;
 import com.example.phobpa.adapter.EventMeAdapter;
@@ -53,7 +55,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private List<Event> eventList;
 
     private CircleImageView circleImageView_profile;
-    private ImageButton button_messages;
 
     private LocationManager locationManager;
     private Double Latitude_current = 0.0;
@@ -70,8 +71,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
         v.findViewById(R.id.buttonCreateEvent).setOnClickListener(this);
-//        v.findViewById(R.id.button_messages).setOnClickListener(this);
         v.findViewById(R.id.buttonMap).setOnClickListener(this);
+        v.findViewById(R.id.button_calculator).setOnClickListener(this);
 
 
         recyclerView = v.findViewById(R.id.recyclerView_home);
@@ -185,16 +186,52 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        String picture = SharedPrefManager.getInstance(getContext()).getUser().getImage_user();
+        System.out.println(picture);
+        if(picture.isEmpty()){
+            circleImageView_profile.setImageResource(R.drawable.user);
+        }else{
+            String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
+            Picasso.get().load(url).into(circleImageView_profile);
+        }
+        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                .getEventNotMe(SharedPrefManager.getInstance(getContext()).getUser().getEmail(),Latitude_current.toString(),Longitude_current.toString());
+
+        call.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                eventList =response.body().getEvents();
+                adapter = new EventMeAdapter( getActivity(),eventList);
+                recyclerView.setAdapter(adapter);
+            }
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) { }
+        });
+
+    }
+
+    public void button_calculator(){
+        Intent intent = new Intent(getContext(), CalculatorActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonCreateEvent:
-                Intent intent = new Intent(getContext(), SelectTypeActivity.class);
+                Intent intent = new Intent(getContext(), PageCheckActivity.class);
                 startActivity(intent);
                 break;
             case R.id.buttonMap:
                 Intent intent2 = new Intent(getContext(), MapsActivity.class);
                 startActivity(intent2);
-
+                break;
+            case R.id.button_calculator:
+                button_calculator();
+                break;
         }
     }
 
@@ -238,6 +275,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             }
         }
     }
+
     protected void buildAlertMessageNoGps() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

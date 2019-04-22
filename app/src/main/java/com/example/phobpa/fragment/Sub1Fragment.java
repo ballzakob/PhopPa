@@ -47,6 +47,7 @@ public class Sub1Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_sub1, container, false);
+        textView = v.findViewById(R.id.textViewWord);
         recyclerView = v.findViewById(R.id.recyclerView_home);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
@@ -77,19 +78,20 @@ public class Sub1Fragment extends Fragment {
                         intent.putExtra("event_longitude",eventList.get(position).getEvent_longitude());
                         intent.putExtra("event_image",eventList.get(position).getEvent_image());
                         intent.putExtra("event_price",eventList.get(position).getEvent_price());
-                        intent.hasExtra("DONE");
                         startActivity(intent);
                         // do whatever
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), eventList.get(position).getEvent_time_start()+"\nby :"+eventList.get(position).getEvent_time_end(), Toast.LENGTH_SHORT).show();
                         // do whatever
                     }
                 })
         );
         return v;
     }
+
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
@@ -116,4 +118,28 @@ public class Sub1Fragment extends Fragment {
             public void onFailure(Call<EventResponse> call, Throwable t) { }
         });
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Call<EventResponse> call2 = RetrofitClient.getInstance().getApi()
+                .getEventMeJoin(SharedPrefManager.getInstance(getContext()).getUser().getEmail());
+
+        call2.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                eventList =response.body().getEvents();
+                adapter = new EventMeAdapter( getActivity(),eventList);
+                recyclerView.setAdapter(adapter);
+                if(eventList.size() ==0){
+                    textView.setText("ยังไม่มีการเข้าร่วมกิจกรรม");
+                }
+
+
+            }
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) { }
+        });
+}
 }

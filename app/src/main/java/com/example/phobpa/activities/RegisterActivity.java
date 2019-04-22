@@ -20,6 +20,7 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -66,13 +67,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextInputLayout textInputEmail, textInputPassword, textInputConfirmPassword, textInputFirstname,
             textInputLastname, textInputTelephone;
 
+    CheckBox checkboxAccept;
+
     private int SELECT_IMAGE = 1001;
     private int CROP_IMAGE = 2001;
 
     private String image_user = "";
 
     CircleImageView CircleImageViewProfile;
-    private TextView textViewBirthday;
+    private TextView textViewBirthday, textView_policy;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     FirebaseAuth auth;
@@ -91,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         textInputFirstname = findViewById(R.id.text_input_Firstname);
         textInputLastname = findViewById(R.id.text_input_Lastname);
         textInputTelephone = findViewById(R.id.text_input_Telephone);
+        checkboxAccept = findViewById(R.id.checkboxAccept);
 
 
         textViewGender = findViewById(R.id.textViewGender);
@@ -103,6 +107,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.button_back_login).setOnClickListener(this);
         findViewById(R.id.textViewEdit).setOnClickListener(this);
         findViewById(R.id.textViewBirthdayRG).setOnClickListener(this);
+        findViewById(R.id.textView_policy).setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
 
@@ -384,11 +389,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void userSignUp() {
         System.out.println("รูป : " + image_user);
-        if (!validationError()) {
+        if (!validationError() || !checkboxAccept.isChecked()) {
             Toast.makeText(this, "กรอกข้อมูลไม่ครบ", Toast.LENGTH_LONG).show();
             return;
         } else {
-            Toast.makeText(this, "กรอกข้อมูลครบถ้วน", Toast.LENGTH_LONG).show();
             AlertDialog.Builder builder =
                     new AlertDialog.Builder(RegisterActivity.this);
             builder.setMessage("ข้อมูลถูกต้อง?");
@@ -520,6 +524,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    private void policy() {
+        Intent intent = new Intent(RegisterActivity.this , PolicyActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -536,6 +545,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(Intent.createChooser(intent, "Select Image from Gallery"), SELECT_IMAGE);
                 break;
+            case R.id.textView_policy:
+                policy();
+                break;
         }
     }
+
+
 }

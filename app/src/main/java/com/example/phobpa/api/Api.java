@@ -114,6 +114,15 @@ public interface Api {
     );
 
     @FormUrlEncoded
+    @POST("updateProfileImg.php")
+    Call<LoginResponse> updateProfileImg(
+            @Field("email") String email,
+            @Field("image_user") String image_user
+    );
+
+
+
+    @FormUrlEncoded
     @POST("confirmIdentity.php")
     Call<DefaultResponse> confirmIdentity(
             @Field("email") String email,
@@ -149,5 +158,18 @@ public interface Api {
             @Field("email") String email,
             @Field("search_query") String search_query
     );
+
+    @FormUrlEncoded
+    @POST("calculatorEvent.php")
+    Call<EventResponse> calculatorEvent(
+            @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("deleteEvent.php")
+    Call<DefaultResponse> deleteEvent(
+            @Field("event_id") String event_id
+    );
+
 
 }

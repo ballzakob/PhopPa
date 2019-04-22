@@ -3,8 +3,6 @@ package com.example.phobpa.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 import com.example.phobpa.R;
 import com.example.phobpa.adapter.UserJoinAdapter;
 import com.example.phobpa.api.RetrofitClient;
-import com.example.phobpa.fragment.HomeFragment;
 import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.modelsUsers.JoinResponse;
 import com.example.phobpa.modelsUsers.StatusResponse;
@@ -41,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EventActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
+public class DetailEventActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax,
             textViewEventDateStart, textViewEventDateEnd, textViewEventTimeStart,
@@ -62,15 +59,11 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private RecyclerView recyclerView;
     private UserJoinAdapter adapter;
     private List<User> userList;
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
+        setContentView(R.layout.activity_detail_event);
         findViewById(R.id.button_back_home).setOnClickListener(this);
-//        findViewById(R.id.buttonSignUp).setOnClickListener(this);
-
 
         textViewEventTitle = findViewById(R.id.textViewEventTitle);
         textViewEventDetail = findViewById(R.id.textViewEventDetail);
@@ -172,13 +165,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
 
                 } else {
-                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(EventActivity.this, "FAIL", Toast.LENGTH_LONG).show();
+                Toast.makeText(DetailEventActivity.this, "FAIL", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -195,7 +188,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         System.out.println(response.body().getUsers());
                         userList = response.body().getUsers();
-                        adapter = new UserJoinAdapter(EventActivity.this, userList);
+                        adapter = new UserJoinAdapter(DetailEventActivity.this, userList);
                         recyclerView.setAdapter(adapter);
                     }
 
@@ -214,69 +207,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         });
         recyclerView = findViewById(R.id.recyclerView_home);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        buttonSignUp = findViewById(R.id.buttonSignUp);
-
-        Call<StatusResponse> call_status = RetrofitClient.getInstance()
-                .getApi().getStatusEvent(
-                        SharedPrefManager.getInstance(EventActivity.this).getUser().getEmail()
-                );
-
-
-        call_status.enqueue(new Callback<StatusResponse>() {
-            @Override
-            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
-
-
-                if (response.body().isStatus()) {
-
-                    if (response.body().getStatus_event().equals("wait")) {
-
-                        Drawable img = EventActivity.this.getResources().getDrawable(R.drawable.ic_wait_white);
-                        buttonSignUp.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-                        buttonSignUp.setBackground(EventActivity.this.getResources().getDrawable(R.drawable.background_button_dont_click));
-                        buttonSignUp.setTextColor(Color.parseColor("#80FFFFFF"));
-                        buttonSignUp.setText(" กำลังตรวจสอบการยืนยันตัวตน");
-
-
-                    } else if (response.body().getStatus_event().equals("no")) {
-
-                        buttonSignUp.setText("กรุณายืนยันตัวตนก่อนเข้าร่วม");
-                        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(EventActivity.this, ConfirmIdentityActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        });
-
-                    } else {
-                        // เมื่อกดปุ่ม buttonCreateEvent
-                        buttonSignUp.setText("เข้าร่วมกิจกรรม");
-                        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                validateError();
-                            }
-                        });
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<StatusResponse> call, Throwable t) {
-
-            }
-        });
     }
 
     public String splitDate(String date) {
         String[] arrDate = date.split("-");
         String day = arrDate[2];
         String mount = "";
-        int year = Integer.valueOf(arrDate[0]) + 543;
+        int year = Integer.valueOf(arrDate[0])+543;
         if (arrDate[1].equals("01")) {
             mount = " ม.ค. ";
         } else if (arrDate[1].equals("02")) {
@@ -302,21 +239,20 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         } else {
             mount = " ธ.ค. ";
         }
-        return day + mount + String.valueOf(year);
+        return day+mount+String.valueOf(year);
     }
 
     public String splitTime(String time) {
         String[] arrTime = time.split(":");
         String hour = arrTime[0];
         String minute = arrTime[1];
-        return hour + ":" + minute + " น.";
+        return hour+":"+minute+" น.";
     }
 
     public boolean validateCountPeople() {
         if (countJoint < countMax) {
             return true;
         } else {
-            Toast.makeText(EventActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -329,9 +265,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                 if (response.body().isStatus()) {
-                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(EventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -342,26 +278,14 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public boolean validateGender() {
-        String gender = getIntent().getExtras().getString("event_gender");
-        String gender_me = SharedPrefManager.getInstance(this).getUser().getGender();
-        if (gender.equals("a")) {
-            return true;
-        } else if (gender_me.equals(gender)) {
-            return true;
-        } else {
-            Toast.makeText(EventActivity.this, "เพศของคุณไม่ตรงกับที่ผู้สร้างกิจกรรมต้องการ", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-    }
-
     public void validateError() {
-        if (!validateCountPeople() || !validateGender()) {
-            return;
-        } else {
+        if (validateCountPeople()) {
             sendData();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             finish();
+        } else {
+            Toast.makeText(DetailEventActivity.this, "กิจกรรมนี้มีคนเข้าร่วมครบแล้ว", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -372,9 +296,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             case R.id.button_back_home:
                 finish();
                 break;
-//            case R.id.buttonSignUp:
-//                validateError();
-//                break;
         }
     }
 

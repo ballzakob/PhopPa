@@ -276,8 +276,8 @@ public class EventJoinActivity extends AppCompatActivity implements View.OnClick
                     public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                         if(response.body().isStatus()){
                             Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(EventJoinActivity.this,MainActivity.class);
-                            startActivity(i);
+//                            Intent i = new Intent(EventJoinActivity.this,MainActivity.class);
+//                            startActivity(i);
                             finish();
                         }else{
                             Toast.makeText(EventJoinActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();

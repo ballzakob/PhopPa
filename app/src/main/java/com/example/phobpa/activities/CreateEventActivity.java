@@ -43,6 +43,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
@@ -66,7 +67,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
     private TextInputLayout textInputTitle, textInputDetial;
 
     private TextView textViewEventSelectDateStart, textViewEventSelectTimeStart,
-            textViewEventSelectDateEnd, textViewEventSelectTimeEnd, textViewNumber,textViewEditPic;
+            textViewEventSelectDateEnd, textViewEventSelectTimeEnd, textViewNumber, textViewEditPic;
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog;
 
@@ -412,7 +413,6 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         });
 
 
-
     }
 
 
@@ -430,10 +430,11 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
             types = "sport";
         } else if (text.equals("บันเทิง")) {
             types = "entertainment";
-        } else {
+        } else if (text.equals("ท่องเที่ยว")) {
             types = "travel";
+        } else {
+            types = "";
         }
-        Toast.makeText(parent.getContext(), types, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -528,7 +529,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
     }
 
     private boolean checkTypes() {
-        if (types.equals("no")) {
+        if (types.equals("")) {
             return false;
         } else {
             return true;
@@ -586,14 +587,13 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
 
     public boolean checkPrice() {
         String price = editTextPrice.getText().toString().trim();
-        if(price.equals("")){
+        if (price.equals("")) {
             editTextPrice.setHintTextColor(Color.RED);
             return false;
-        }
-        else if( Character.toString(price.charAt(0)).equals(".")){
+        } else if (Character.toString(price.charAt(0)).equals(".")) {
             editTextPrice.setTextColor(Color.RED);
             return false;
-        }else{
+        } else {
             editTextPrice.setHintTextColor(Color.WHITE);
             editTextPrice.setTextColor(Color.WHITE);
             return true;
@@ -601,17 +601,17 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
 
     }
 
-    public boolean validationError(){
+    public boolean validationError() {
         if (!checkLocation() || !checkTypes() || !validateTitle() || !validateDetial() ||
                 !checkDateStart() || !checkDateEnd() || !checkTimeStart() || !checkTimeEnd() ||
                 image_event.equals("") || !checkPrice()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-//        method สร้าง Event
+    //        method สร้าง Event
     private void createEvent() {
 
         checkLocation();
@@ -627,12 +627,12 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         if (!validationError()) {
             Toast.makeText(this, "กรอกข้อมูลไม่ครบ", Toast.LENGTH_SHORT).show();
             return;
-        }
-        else {
+        } else {
 
             AlertDialog.Builder builder =
                     new AlertDialog.Builder(CreateEventActivity.this);
-            builder.setMessage("ข้อมูลถูกต้อง?");
+            builder.setTitle("ข้อมูลถูกต้อง?");
+            builder.setMessage("หากสร้างกิจกรมแล้วคุณจะไม่สามารถแก้ไขข้อมูลได้");
             builder.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     String email = SharedPrefManager.getInstance(CreateEventActivity.this).getUser().getEmail();
@@ -659,7 +659,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                     Call<DefaultResponse> call = RetrofitClient
                             .getInstance()
                             .getApi()
-                            .createEvent(email, title, detial,dateStart,dateEnd,timeStart,timeEnd,nemberPeople,
+                            .createEvent(email, title, detial, dateStart, dateEnd, timeStart, timeEnd, nemberPeople,
                                     gender, types, price, name_event, address_event, latitude_event,
                                     longitude_event, image_event);
                     call.enqueue(new Callback<DefaultResponse>() {
@@ -667,7 +667,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                         public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                             if (response.body().isStatus()) {
                                 Toast.makeText(CreateEventActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
-                                Intent i = new Intent(CreateEventActivity.this , MainActivity.class);
+                                Intent i = new Intent(CreateEventActivity.this, MainActivity.class);
                                 startActivity(i);
                                 finish();
                             } else {

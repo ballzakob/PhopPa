@@ -1,83 +1,101 @@
 package com.example.phobpa.activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phobpa.R;
 import com.example.phobpa.RecyclerItemClickListener;
+import com.example.phobpa.adapter.CalculatorAdapter;
 import com.example.phobpa.adapter.EventMeAdapter;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsEvents.Event;
 import com.example.phobpa.modelsEvents.EventResponse;
 import com.example.phobpa.storage.SharedPrefManager;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchTypeActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private TextView textViewEventType;
-    private TextView textViewWord;
+public class CalculatorActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private EventMeAdapter adapter;
+    private CalculatorAdapter adapter;
     private List<Event> eventList;
+
+    TextView textView_price;
+    Button button_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_type);
+        setContentView(R.layout.activity_calculator);
 
-        findViewById(R.id.button_back).setOnClickListener(this);
-
-        String type = getIntent().getExtras().getString("event_types");
-
-        textViewEventType = findViewById(R.id.textViewEventType);
-        textViewWord = findViewById(R.id.textViewWord);
-
-        setType(type);
+        textView_price = findViewById(R.id.textView_price);
+        button_back = findViewById(R.id.button_back);
+        button_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(SearchTypeActivity.this, 2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Call<EventResponse> call = RetrofitClient.getInstance().getApi()
-                .searchEventType(SharedPrefManager.getInstance(this).getUser().getEmail(),type);
+                .calculatorEvent(SharedPrefManager.getInstance(this).getUser().getEmail());
 
         call.enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
 
-                eventList =response.body().getEvents();
-                adapter = new EventMeAdapter( SearchTypeActivity.this,eventList);
+
+                eventList = response.body().getEvents();
+                adapter = new CalculatorAdapter(CalculatorActivity.this, eventList);
                 recyclerView.setAdapter(adapter);
 
-                if (eventList.size()>0){
-                    textViewWord.setText("");
+                double sum = 0;
+                for (int i = 0 ; i<eventList.size();i++){
+                    double num = Double.valueOf(eventList.get(i).getEvent_price());
+                    sum += num;
                 }
+                String sum_cal = String.valueOf(sum);
+                if(sum_cal.substring(sum_cal.length()-2,sum_cal.length()).equals(".0")){
+                    sum_cal = sum_cal.substring(0,sum_cal.length()-2);
+                }
+                textView_price.setText(sum_cal);
 
 
             }
+
             @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) { }
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+            }
         });
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-
 //                        Toast.makeText(getContext(), eventList.get(position).getEvent_title(), Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(SearchTypeActivity.this, EventActivity.class);
+                        Intent intent = new Intent(CalculatorActivity.this, DetailEventActivity.class);
                         intent.putExtra("event_id",eventList.get(position).getEvent_id());
                         intent.putExtra("email",eventList.get(position).getEmail());
                         intent.putExtra("event_title",eventList.get(position).getEvent_title());
@@ -101,77 +119,9 @@ public class SearchTypeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        String price=  eventList.get(position).getEvent_price();
-//                        Toast.makeText(getContext(), eventList.get(position).getEvent_title()+"\nby :"+eventList.get(position).getEmail(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(SearchTypeActivity.this, "รหัสกิจกรรม : "+eventList.get(position).getEvent_id(), Toast.LENGTH_SHORT).show();
                         // do whatever
                     }
                 })
         );
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        String type = getIntent().getExtras().getString("event_types");
-        setType(type);
-        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
-                .searchEventType(SharedPrefManager.getInstance(this).getUser().getEmail(),type);
-
-        call.enqueue(new Callback<EventResponse>() {
-            @Override
-            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-
-                eventList =response.body().getEvents();
-                adapter = new EventMeAdapter( SearchTypeActivity.this,eventList);
-                recyclerView.setAdapter(adapter);
-
-                if (eventList.size()>0){
-                    textViewWord.setText("");
-                }
-
-
-            }
-            @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) { }
-        });
-    }
-
-    public void setType(String type){
-        if(type.equals("food")){
-
-            textViewEventType.setText("อาหาร");
-
-        }else if(type.equals("cosmetic")){
-
-            textViewEventType.setText("เครื่องสำอาง");
-
-        }else if(type.equals("fashion")){
-
-            textViewEventType.setText("แฟชั่น");
-
-        }else if(type.equals("sport")){
-
-            textViewEventType.setText("กีฬา");
-
-        }else if(type.equals("entertainment")){
-
-            textViewEventType.setText("บันเทิง");
-
-        }else if(type.equals("travel")){
-            textViewEventType.setText("ท่องเที่ยว");
-
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                finish();
-                break;
-        }
     }
 }

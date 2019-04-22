@@ -12,6 +12,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phobpa.R;
@@ -35,6 +36,8 @@ import retrofit2.Response;
  */
 public class Sub2Fragment extends Fragment {
 
+    TextView textView;
+
     private RecyclerView recyclerView;
     private EventMeAdapter adapter;
     private List<Event> eventList;
@@ -43,7 +46,8 @@ public class Sub2Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_sub1, container, false);
+        View v = inflater.inflate(R.layout.fragment_sub2, container, false);
+        textView = v.findViewById(R.id.textViewWord);
         recyclerView = v.findViewById(R.id.recyclerView_home);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
@@ -88,7 +92,7 @@ public class Sub2Fragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Call<EventResponse> call = RetrofitClient.getInstance().getApi()
@@ -101,7 +105,35 @@ public class Sub2Fragment extends Fragment {
                 eventList =response.body().getEvents();
                 adapter = new EventMeAdapter( getActivity(),eventList);
                 recyclerView.setAdapter(adapter);
+                if(eventList.size() ==0){
+                    TextView textView = view.findViewById(R.id.textViewWord);
+                    textView.setText("ยังไม่มีการสร้างกิจกรรม");
+                }
 
+
+            }
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) { }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                .getEventMe(SharedPrefManager.getInstance(getContext()).getUser().getEmail());
+
+        call.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                eventList =response.body().getEvents();
+                adapter = new EventMeAdapter( getActivity(),eventList);
+                recyclerView.setAdapter(adapter);
+                if(eventList.size() ==0){
+                    textView.setText("ยังไม่มีการสร้างกิจกรรม");
+                }
 
             }
             @Override

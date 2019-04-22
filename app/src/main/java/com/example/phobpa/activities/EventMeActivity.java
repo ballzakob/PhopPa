@@ -1,11 +1,15 @@
 package com.example.phobpa.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +41,7 @@ import retrofit2.Response;
 public class EventMeActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private TextView textViewEventTitle, textViewEventDetail, textViewNumberPeopleMax, textViewEventDateStart,
-            textViewEventDateEnd,textViewEventTimeStart, textViewEventTimeEnd,
+            textViewEventDateEnd, textViewEventTimeStart, textViewEventTimeEnd,
             textViewEventGender, textViewNameOwnerEvent, textViewEventLocationName,
             textViewEventAddress, textViewNumberPeople, textViewShowText, textViewEventPrice;
 
@@ -59,6 +63,7 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_me);
         findViewById(R.id.button_back_home).setOnClickListener(this);
+        findViewById(R.id.buttonDeleteEvent).setOnClickListener(this);
 
         textViewEventTitle = findViewById(R.id.textViewEventTitle);
         textViewEventDetail = findViewById(R.id.textViewEventDetail);
@@ -209,7 +214,7 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         String[] arrDate = date.split("-");
         String day = arrDate[2];
         String mount = "";
-        int year = Integer.valueOf(arrDate[0])+543;
+        int year = Integer.valueOf(arrDate[0]) + 543;
         if (arrDate[1].equals("01")) {
             mount = " ม.ค. ";
         } else if (arrDate[1].equals("02")) {
@@ -235,14 +240,14 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             mount = " ธ.ค. ";
         }
-        return day+mount+String.valueOf(year);
+        return day + mount + String.valueOf(year);
     }
 
     public String splitTime(String time) {
         String[] arrTime = time.split(":");
         String hour = arrTime[0];
         String minute = arrTime[1];
-        return hour+":"+minute+" น.";
+        return hour + ":" + minute + " น.";
     }
 
     public boolean validateCountPeople() {
@@ -284,6 +289,49 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    public void deleteEvent() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(EventMeActivity.this);
+        builder.setMessage("คุณต้องการยกเลิกการเข้าร่วมกิจกรรมหรือไม่ ? หากต้องการลบให้พิพม์คำว่า ลบ ในช่องด้านล่าง");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (input.getText().toString().equals("ลบ")) {
+                    String event_id = getIntent().getExtras().getString("event_id");
+
+                    Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().deleteEvent(event_id);
+                    call.enqueue(new Callback<DefaultResponse>() {
+                        @Override
+                        public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                            if(response.body().isStatus()){
+                                Toast.makeText(EventMeActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+//                                Intent i = new Intent(EventMeActivity.this,MainActivity.class);
+//                                startActivity(i);
+//                                getIntent().removeExtra("key");
+                                finish();
+                            }else{
+                                Toast.makeText(EventMeActivity.this, response.body().getMessages(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<DefaultResponse> call, Throwable t) {
+
+                        }
+                    });
+                    Toast.makeText(EventMeActivity.this, "พิมพ์ข้อความถูกต้อง", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(EventMeActivity.this, "พิมพ์ข้อความไ่ม่ถูกต้อง", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                }
+
+
+
+            }
+        });
+        builder.show();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -292,7 +340,9 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.buttonSignUp:
                 validateError();
-
+                break;
+            case R.id.buttonDeleteEvent:
+                deleteEvent();
                 break;
         }
     }

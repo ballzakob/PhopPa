@@ -174,9 +174,7 @@ public class ConfirmIdentityActivity extends AppCompatActivity implements View.O
 
                         }
                     });
-                    Intent intent = new Intent(ConfirmIdentityActivity.this, SettingsActivity.class);
                     finish();
-                    startActivity(intent);
                 }
             });
             builder.setNegativeButton("ไม่ยืนยัน", new DialogInterface.OnClickListener() {

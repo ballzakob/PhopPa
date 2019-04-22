@@ -16,6 +16,7 @@ import com.example.phobpa.R;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.modelsUsers.StatusResponse;
+import com.example.phobpa.modelsUsers.UserResponse;
 import com.example.phobpa.storage.SharedPrefManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
@@ -39,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.buttonLogout).setOnClickListener(this);
-        findViewById(R.id.buttonDelete).setOnClickListener(this);
         findViewById(R.id.buttonEditProfile).setOnClickListener(this);
 
 
@@ -48,23 +48,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         textViewBirthday = findViewById(R.id.textViewBirthday);
         textViewTelephone = findViewById(R.id.textViewTelephone);
 
-        textViewFirstName.setText(SharedPrefManager.getInstance(this).getUser().getFirstname());
-        textViewLastName.setText(SharedPrefManager.getInstance(this).getUser().getLastname());
-        textViewBirthday.setText(SharedPrefManager.getInstance(this).getUser().getBirthday());
-        textViewTelephone.setText(SharedPrefManager.getInstance(this).getUser().getTelephone());
+//        textViewFirstName.setText(SharedPrefManager.getInstance(this).getUser().getFirstname());
+//        textViewLastName.setText(SharedPrefManager.getInstance(this).getUser().getLastname());
+//        textViewBirthday.setText(SharedPrefManager.getInstance(this).getUser().getBirthday());
+//        textViewTelephone.setText(SharedPrefManager.getInstance(this).getUser().getTelephone());
 
         buttonConfirmIdentity = findViewById(R.id.buttonConfirmIdentity);
 
 
         circleImageView_profile =findViewById(R.id.circleImageView_profile);
-        String picture = SharedPrefManager.getInstance(this).getUser().getImage_user();
-        if(picture.isEmpty()){
-            circleImageView_profile.setImageResource(R.drawable.user);
-        }else{
-            String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
-            System.out.println(url);
-            Picasso.get().load(url).into(circleImageView_profile);
-        }
+//        String picture = SharedPrefManager.getInstance(this).getUser().getImage_user();
+//        if(picture.isEmpty()){
+//            circleImageView_profile.setImageResource(R.drawable.user);
+//        }else{
+//            String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
+//            System.out.println(url);
+//            Picasso.get().load(url).into(circleImageView_profile);
+//        }
 
         Call<StatusResponse> call = RetrofitClient.getInstance()
                 .getApi().getStatusEvent(
@@ -109,6 +109,90 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onFailure(Call<StatusResponse> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Call<StatusResponse> call2 = RetrofitClient.getInstance()
+                .getApi().getStatusEvent(
+                        SharedPrefManager.getInstance(SettingsActivity.this).getUser().getEmail()
+                );
+
+        call2.enqueue(new Callback<StatusResponse>() {
+            @Override
+            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
+                if (response.body().isStatus()) {
+
+                    if(response.body().getStatus_event().equals("wait")){
+
+                        Drawable img = SettingsActivity.this.getResources().getDrawable( R.drawable.ic_wait_white );
+                        buttonConfirmIdentity.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                        buttonConfirmIdentity.setBackground(SettingsActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
+                        buttonConfirmIdentity.setTextColor(Color.parseColor("#80FFFFFF"));
+                        buttonConfirmIdentity.setText(" กำลังตรวจสอบการยืนยันตัวตน");
+
+
+                    }else if(response.body().getStatus_event().equals("yes")){
+
+                        Drawable img = SettingsActivity.this.getResources().getDrawable( R.drawable.ic_done_white );
+                        buttonConfirmIdentity.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                        buttonConfirmIdentity.setBackground(SettingsActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
+                        buttonConfirmIdentity.setTextColor(Color.parseColor("#80FFFFFF"));
+                        buttonConfirmIdentity.setText(" ยืนยันตัวตนเสร็จเรียบร้อย");
+
+                    }else{
+                        buttonConfirmIdentity.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(SettingsActivity.this,ConfirmIdentityActivity.class);
+                                startActivity(i);
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<StatusResponse> call, Throwable t) {
+
+            }
+        });
+
+        Call<UserResponse> call = RetrofitClient.getInstance()
+                .getApi().getUser(SharedPrefManager.getInstance(this).getUser().getEmail());
+
+
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.body().isStatus()) {
+                    textViewFirstName.setText(response.body().getUser().getFirstname());
+                    textViewLastName.setText(response.body().getUser().getLastname());
+                    textViewBirthday.setText(response.body().getUser().getBirthday());
+                    textViewTelephone.setText(response.body().getUser().getTelephone());
+
+                    String picture = response.body().getUser().getImage_user();
+                    if(picture.isEmpty()){
+                        circleImageView_profile.setImageResource(R.drawable.user);
+                    }else{
+                        String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
+                        System.out.println(url);
+                        Picasso.get().load(url).into(circleImageView_profile);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
 
             }
         });
@@ -194,7 +278,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         startActivity(intent);
         getIntent().removeExtra("key");
-        finish();
+//        finish();
     }
 
     public void ConfirmIdentity(){
@@ -211,8 +295,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.buttonLogout:
                 logout();
-                break;
-            case R.id.buttonDelete:
                 break;
             case R.id.buttonEditProfile:
                 EditProfile();

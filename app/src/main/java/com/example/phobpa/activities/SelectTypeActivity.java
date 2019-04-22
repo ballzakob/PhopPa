@@ -93,6 +93,7 @@ public class SelectTypeActivity extends AppCompatActivity implements AdapterView
             public void onClick(View v) {
                 Intent i = new Intent(SelectTypeActivity.this,CreateEventActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 

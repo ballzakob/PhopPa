@@ -27,7 +27,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SearchActivity"></activity>
+        <activity android:name=".activities.PolicyActivity"></activity>
+        <activity android:name=".activities.DetailEventActivity" />
+        <activity android:name=".activities.PageCheckActivity" />
+        <activity android:name=".activities.CalculatorActivity" />
+        <activity android:name=".activities.SearchActivity" />
         <activity android:name=".activities.SearchTypeActivity" />
         <activity android:name=".activities.EventJoinActivity" />
         <activity android:name=".activities.EventMeActivity" />
