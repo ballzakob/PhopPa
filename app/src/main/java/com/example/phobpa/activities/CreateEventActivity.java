@@ -53,16 +53,18 @@ import retrofit2.Response;
 
 public class CreateEventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    Spinner spinner;
-    String types;
+    private Spinner spinner;
+    private String types;
 
     private static final int REQUEST_CODE_LACEPICKER = 1;
-    String name_event = "";
-    String address_event = "";
-    String latitude_event = "";
-    String longitude_event = "";
-    TextView textViewEventNameLocation;
+    private String name_event = "";
+    private String address_event = "";
+    private String latitude_event = "";
+    private String longitude_event = "";
+    private TextView textViewEventNameLocation;
 
+    private String StartDate;
+    private String EndDate;
 
     private TextInputLayout textInputTitle, textInputDetial;
 
@@ -212,7 +214,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                                 // TODO: 2019-03-06  set textview เอาวันที่ที่เลือกมาแสดง
-                                String str = year + "-" + (month + 1) + "-" + day;
+                                String str = splitDate(year + "-" + (month + 1) + "-" + day);
+                                StartDate = year + "-" + (month + 1) + "-" + day;
                                 textViewEventSelectDateStart.setTextColor(Color.WHITE);
                                 textViewEventSelectDateStart.setText(str);
                             }
@@ -238,7 +241,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                                 // TODO: 2019-03-06  set textview เอาวันที่ที่เลือกมาแสดง
-                                String str = year + "-" + (month + 1) + "-" + day;
+                                String str = year+543 + "-" + (month + 1) + "-" + day;
+                                EndDate = year + "-" + (month + 1) + "-" + day;
                                 textViewEventSelectDateEnd.setTextColor(Color.WHITE);
                                 textViewEventSelectDateEnd.setText(str);
                             }
@@ -351,59 +355,6 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
             }
         });
 
-//        Call<StatusResponse> call = RetrofitClient.getInstance()
-//                .getApi().getStatusEvent(
-//                        SharedPrefManager.getInstance(CreateEventActivity.this).getUser().getEmail()
-//                );
-//
-//
-//        call.enqueue(new Callback<StatusResponse>() {
-//            @Override
-//            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
-//
-//                if (response.body().isStatus()) {
-//
-//                    if(response.body().getStatus_event().equals("wait")){
-//
-//                        Drawable img = CreateEventActivity.this.getResources().getDrawable( R.drawable.ic_wait_white );
-//                        buttonCreateEvent.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-//                        buttonCreateEvent.setBackground(CreateEventActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
-//                        buttonCreateEvent.setTextColor(Color.parseColor("#80FFFFFF"));
-//                        buttonCreateEvent.setText(" กำลังตรวจสอบการยืนยันตัวตน");
-//
-//
-//                    }else if(response.body().getStatus_event().equals("no")){
-//
-//                        buttonCreateEvent.setBackground(CreateEventActivity.this.getResources().getDrawable( R.drawable.background_button_dont_click ));
-//                        buttonCreateEvent.setText("กรุณายืนยันตัวตน");
-//                        buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                Intent i = new Intent(CreateEventActivity.this,ConfirmIdentityActivity.class);
-//                                startActivity(i);
-//                                finish();
-//                            }
-//                        });
-//
-//                    }else{
-//                        // เมื่อกดปุ่ม buttonCreateEvent
-//                        buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                createEvent();
-//                            }
-//                        });
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<StatusResponse> call, Throwable t) {
-//
-//            }
-//        });
-
 // เมื่อกดปุ่ม buttonCreateEvent
         buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -414,6 +365,40 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
 
 
     }
+
+    public String splitDate(String date) {
+        String[] arrDate = date.split("-");
+        String day = arrDate[2];
+        String mount = "";
+        int year = Integer.valueOf(arrDate[0]) + 543;
+        if (arrDate[1].equals("01")) {
+            mount = " ม.ค. ";
+        } else if (arrDate[1].equals("02")) {
+            mount = " ก.พ. ";
+        } else if (arrDate[1].equals("03")) {
+            mount = " มี.ค. ";
+        } else if (arrDate[1].equals("04")) {
+            mount = " เม.ย. ";
+        } else if (arrDate[1].equals("05")) {
+            mount = " พ.ค. ";
+        } else if (arrDate[1].equals("06")) {
+            mount = " มิ.ย. ";
+        } else if (arrDate[1].equals("07")) {
+            mount = " ก.ค. ";
+        } else if (arrDate[1].equals("08")) {
+            mount = " ส.ค. ";
+        } else if (arrDate[1].equals("09")) {
+            mount = " ก.ย. ";
+        } else if (arrDate[1].equals("10")) {
+            mount = " ต.ค. ";
+        } else if (arrDate[1].equals("11")) {
+            mount = " พ.ย. ";
+        } else {
+            mount = " ธ.ค. ";
+        }
+        return day + mount + String.valueOf(year);
+    }
+
 
 
     //    method ทำ spinner
@@ -638,8 +623,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
                     String email = SharedPrefManager.getInstance(CreateEventActivity.this).getUser().getEmail();
                     String title = textInputTitle.getEditText().getText().toString().trim();
                     String detial = textInputDetial.getEditText().getText().toString().trim();
-                    String dateStart = textViewEventSelectDateStart.getText().toString().trim();
-                    String dateEnd = textViewEventSelectDateEnd.getText().toString().trim();
+                    String dateStart = StartDate;
+                    String dateEnd = EndDate;
                     String timeStart = textViewEventSelectTimeStart.getText().toString().trim();
                     String timeEnd = textViewEventSelectTimeEnd.getText().toString().trim();
                     String nemberPeople = textViewNumber.getText().toString().trim();

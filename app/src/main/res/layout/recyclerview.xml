@@ -81,6 +81,9 @@
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:background="#72000000"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:layout_alignBottom="@+id/imageViewEvent"
                     android:layout_marginBottom="0dp"
                     android:orientation="vertical">
@@ -94,28 +97,37 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_people_white"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white"
+
+                            android:textSize="12dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:layout_marginLeft="5dp"
-                            android:text="จำนวนคนเข้าร่วม "
-                            android:textSize="12dp"/>
+                            android:text="  "
+                            android:textSize="12dp" />
 
                         <TextView
-                            android:id="@+id/textViewNumber"
+                            android:id="@+id/textViewJoint"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
+                            android:layout_gravity=""
                             android:text="1"
-                            android:textSize="12dp" />
+                            android:textSize="20dp" />
+
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
                             android:text=" / "
-                            android:textSize="12dp" />
+                            android:textSize="20dp" />
 
                         <TextView
                             android:id="@+id/textViewNumberPeople"
@@ -123,7 +135,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
                             android:text="1"
-                            android:textSize="12dp" />
+                            android:textSize="20dp" />
 
                     </LinearLayout>
 

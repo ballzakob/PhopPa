@@ -5,14 +5,14 @@ public class Event {
 
     private String event_id, email, event_title, event_detail, event_date_start, event_date_end,
             event_time_start, event_time_end, event_number_people, event_gender, event_types, event_price, event_location_name,
-            event_location_address, event_latitude, event_longitude, event_image;
+            event_location_address, event_latitude, event_longitude, event_image, event_joint;
 
     public Event(String event_id, String email, String event_title, String event_detail,
                  String event_date_start, String event_date_end, String event_time_start,
                  String event_time_end, String event_number_people,
                  String event_gender, String event_types, String event_price,
                  String event_location_name, String event_location_address, String event_latitude,
-                 String event_longitude, String event_image) {
+                 String event_longitude, String event_image, String event_joint) {
         this.event_id = event_id;
         this.email = email;
         this.event_title = event_title;
@@ -30,6 +30,7 @@ public class Event {
         this.event_latitude = event_latitude;
         this.event_longitude = event_longitude;
         this.event_image = event_image;
+        this.event_joint = event_joint;
     }
 
     public String getEvent_id() {
@@ -99,4 +100,6 @@ public class Event {
     public String getEvent_image() {
         return event_image;
     }
+
+    public String getEvent_joint() { return event_joint; }
 }

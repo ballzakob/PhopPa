@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,12 +24,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phobpa.R;
 import com.example.phobpa.RecyclerItemClickListener;
 import com.example.phobpa.activities.CalculatorActivity;
+import com.example.phobpa.activities.CreateEventActivity;
 import com.example.phobpa.activities.EventActivity;
+import com.example.phobpa.activities.MainActivity;
 import com.example.phobpa.activities.MapsActivity;
 import com.example.phobpa.activities.MessagesActivity;
 import com.example.phobpa.activities.PageCheckActivity;
@@ -37,6 +42,7 @@ import com.example.phobpa.adapter.EventMeAdapter;
 import com.example.phobpa.api.RetrofitClient;
 import com.example.phobpa.modelsEvents.Event;
 import com.example.phobpa.modelsEvents.EventResponse;
+import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.storage.SharedPrefManager;
 import com.squareup.picasso.Picasso;
 
@@ -60,6 +66,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private Double Latitude_current = 0.0;
     private Double Longitude_current = 0.0;
 
+    private TextView textView_sort;
+
+    int sort_num = 0;
+
     private static final int REQUEST_LOCATION = 1;
 
     // TODO: 2019-03-07   method main ของหน้า
@@ -72,8 +82,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         v.findViewById(R.id.buttonCreateEvent).setOnClickListener(this);
         v.findViewById(R.id.buttonMap).setOnClickListener(this);
-        v.findViewById(R.id.button_calculator).setOnClickListener(this);
+        v.findViewById(R.id.linearLayout_srot).setOnClickListener(this);
+        v.findViewById(R.id.fab).setOnClickListener(this);
 
+        textView_sort = v.findViewById(R.id.textView_sort);
 
         recyclerView = v.findViewById(R.id.recyclerView_home);
         recyclerView.setHasFixedSize(true);
@@ -196,26 +208,102 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             String url = "http://pilot.cp.su.ac.th/usr/u07580457/phoppa/images/prof/"+picture;
             Picasso.get().load(url).into(circleImageView_profile);
         }
-        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
-                .getEventNotMe(SharedPrefManager.getInstance(getContext()).getUser().getEmail(),Latitude_current.toString(),Longitude_current.toString());
+        if(sort_num == 0){
+            Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                    .getEventNotMe(SharedPrefManager.getInstance(getContext()).getUser().getEmail(),Latitude_current.toString(),Longitude_current.toString());
 
-        call.enqueue(new Callback<EventResponse>() {
-            @Override
-            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+            call.enqueue(new Callback<EventResponse>() {
+                @Override
+                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
 
-                eventList =response.body().getEvents();
-                adapter = new EventMeAdapter( getActivity(),eventList);
-                recyclerView.setAdapter(adapter);
-            }
-            @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) { }
-        });
+                    eventList =response.body().getEvents();
+                    adapter = new EventMeAdapter( getActivity(),eventList);
+                    recyclerView.setAdapter(adapter);
+                }
+                @Override
+                public void onFailure(Call<EventResponse> call, Throwable t) { }
+            });
+        } else{
+            Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                    .sortByDistance(SharedPrefManager.getInstance(getContext()).getUser().getEmail(),Latitude_current.toString(),Longitude_current.toString());
+
+            call.enqueue(new Callback<EventResponse>() {
+                @Override
+                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                    eventList =response.body().getEvents();
+                    adapter = new EventMeAdapter( getActivity(),eventList);
+                    recyclerView.setAdapter(adapter);
+                }
+                @Override
+                public void onFailure(Call<EventResponse> call, Throwable t) { }
+            });
+        }
+
 
     }
 
     public void button_calculator(){
         Intent intent = new Intent(getContext(), CalculatorActivity.class);
         startActivity(intent);
+    }
+
+    public void sort(){
+        CharSequence[] values = {" วันที่ "," ระยะทาง "};
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(getContext());
+        builder.setTitle("เรียงข้อมูลตาม");
+        builder.setSingleChoiceItems(values, -1, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                switch(item)
+                {
+                    case 0:
+
+                        textView_sort.setText("วันที่");
+                        Toast.makeText(getContext(), "เรียงข้อมูลตามวันที่", Toast.LENGTH_LONG).show();
+                        Call<EventResponse> call = RetrofitClient.getInstance().getApi()
+                                .getEventNotMe(SharedPrefManager.getInstance(getContext()).getUser().getEmail(),Latitude_current.toString(),Longitude_current.toString());
+
+                        call.enqueue(new Callback<EventResponse>() {
+                            @Override
+                            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                                eventList =response.body().getEvents();
+                                adapter = new EventMeAdapter( getActivity(),eventList);
+                                recyclerView.setAdapter(adapter);
+                            }
+                            @Override
+                            public void onFailure(Call<EventResponse> call, Throwable t) { }
+                        });
+                        sort_num = 0;
+                        break;
+                    case 1:
+                        textView_sort.setText("ระยะทาง");
+                        Toast.makeText(getContext(), "เรียงข้อมูลตามระยะทาง", Toast.LENGTH_LONG).show();
+                        Call<EventResponse> call2 = RetrofitClient.getInstance().getApi()
+                                .sortByDistance(SharedPrefManager.getInstance(getContext()).getUser().getEmail(),Latitude_current.toString(),Longitude_current.toString());
+
+                        call2.enqueue(new Callback<EventResponse>() {
+                            @Override
+                            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                                eventList =response.body().getEvents();
+                                adapter = new EventMeAdapter( getActivity(),eventList);
+                                recyclerView.setAdapter(adapter);
+                            }
+                            @Override
+                            public void onFailure(Call<EventResponse> call, Throwable t) { }
+                        });
+                        sort_num = 1;
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     @Override
@@ -229,7 +317,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 Intent intent2 = new Intent(getContext(), MapsActivity.class);
                 startActivity(intent2);
                 break;
-            case R.id.button_calculator:
+            case R.id.linearLayout_srot:
+                sort();
+                break;
+            case R.id.fab:
                 button_calculator();
                 break;
         }

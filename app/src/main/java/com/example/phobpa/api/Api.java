@@ -76,6 +76,14 @@ public interface Api {
     );
 
     @FormUrlEncoded
+    @POST("sortByDistance.php")
+    Call<EventResponse> sortByDistance(
+            @Field("email") String email,
+            @Field("event_latitude") String event_latitude,
+            @Field("event_longitude") String event_longitude
+    );
+
+    @FormUrlEncoded
     @POST("showEventNotMe.php")
     Call<EventResponse> showEventNotMe(
             @Field("email") String email,

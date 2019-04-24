@@ -73,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private int CROP_IMAGE = 2001;
 
     private String image_user = "";
+    private String birthday_user = "";
 
     CircleImageView CircleImageViewProfile;
     private TextView textViewBirthday, textView_policy;
@@ -274,7 +275,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         month = month + 1;
-                        String date = year + "-" + month + "-" + day;
+                        String date = year+543 + "-" + month + "-" + day;
+                        birthday_user = year + "-" + month + "-" + day;
                         textViewBirthday.setText(date);
                         textViewBirthday.setTextColor(Color.BLACK);
                     }
@@ -410,7 +412,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         gender = "f";
                     }
-                    String birthday = textViewBirthday.getText().toString().trim();
+                    String birthday = birthday_user;
                     String telephone = textInputTelephone.getEditText().getText().toString().trim();
 
                     System.out.println("รูป : " + image_user);

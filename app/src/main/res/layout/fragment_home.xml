@@ -29,13 +29,28 @@
             android:src="@drawable/ic_account" />
 
 
-        <ImageButton
-            android:id="@+id/button_calculator"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <LinearLayout
+            android:id="@+id/linearLayout_srot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/calculator" />
+            android:layout_marginEnd="16dp">
+            <TextView
+                android:id="@+id/textView_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="วันที่"
+                android:layout_gravity="center"
+                android:textColor="@color/white"/>
+
+            <ImageView
+                android:layout_marginLeft="5dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/sort_white" />
+        </LinearLayout>
+
+
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
@@ -83,6 +98,19 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="@color/colorPrimary"
+        android:outlineAmbientShadowColor="@color/colorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:srcCompat="@drawable/calculator" />
 
 
 </RelativeLayout>
