@@ -4,12 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activities.EventMeActivity">
+    tools:context=".activities.EditEventActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background">
+
+
+        <TextView
+            android:id="@+id/textActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="แก้ไขข้อมูลกิจกรรม"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_back_24dp" />
+
+
+        <TextView
+            android:id="@+id/textAccept"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="เสร็จ"
+            android:textColor="@color/white" />
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_home">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,15 +107,15 @@
                 </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/textViewEventTitle"
+                <EditText
+                    android:id="@+id/editTextEventTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:hint="ชื่อกิจกรรม"
                     android:inputType="textMultiLine"
                     android:paddingLeft="15dp"
-                    android:text="ชื่อกิจกรรม"
                     android:textSize="24dp" />
 
 
@@ -119,25 +153,13 @@
                         android:background="@drawable/ic_person_black" />
 
 
-                    <TextView
-                        android:id="@+id/textViewNumberPeople"
+                    <EditText
+                        android:id="@+id/editTextNumberPeopleMax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
-                        android:text="numJoin"
-                        android:textSize="25dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:textSize="25dp" />
-
-                    <TextView
-                        android:id="@+id/textViewNumberPeopleMax"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Max"
+                        android:gravity="center"
+                        android:hint="Max"
+                        android:inputType="number"
                         android:textSize="25dp" />
 
                     <TextView
@@ -150,26 +172,6 @@
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="5dp" />
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/textViewShowText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"/>
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerView_home"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_below="@+id/linearLayoutCreateEvent"
-                        android:layout_centerHorizontal="true"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
-
-                </RelativeLayout>
 
 
             </LinearLayout>
@@ -187,6 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -204,22 +207,26 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:paddingRight="15dp"
-                        android:src="@drawable/ic_money_black"/>
-                    <TextView
-                        android:id="@+id/textViewEventPrice"
+                        android:src="@drawable/ic_money_black" />
+
+                    <EditText
+                        android:id="@+id/editTextEventPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:gravity="center"
+                        android:hint="0"
+                        android:inputType="numberDecimal"
                         android:paddingRight="15dp"
                         android:textSize="18dp" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -227,10 +234,12 @@
                         android:textSize="18dp" />
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
@@ -239,6 +248,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/line" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -253,11 +263,11 @@
                     android:text="รายละเอียด"
                     android:textSize="24dp" />
 
-                <TextView
-                    android:id="@+id/textViewEventDetail"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editTextEventDetail"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="รายละเอียด"
+                    android:hint="รายละเอียด"
                     android:textSize="16dp" />
 
             </LinearLayout>
@@ -280,27 +290,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="เริ่ม : " />
+
                         <TextView
                             android:id="@+id/textViewEventDateStart"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/background_button_lock"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
                             android:text="วันเริ่มต้น" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=" เวลา : " />
+
                         <TextView
                             android:id="@+id/textViewEventTimeStart"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/background_button_lock"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
                             android:text="เวลาเริ่มต้น" />
 
                     </LinearLayout>
@@ -309,10 +330,12 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="10dp" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -322,16 +345,24 @@
                             android:id="@+id/textViewEventDateEnd"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/background_button_lock"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
                             android:text="วันสิ้นสุด" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="  เวลา : " />
+
                         <TextView
                             android:id="@+id/textViewEventTimeEnd"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="เวลาสิ้นสุด   " />
+                            android:background="@drawable/background_button_lock"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="เวลาสิ้นสุด" />
 
                     </LinearLayout>
 
@@ -439,62 +470,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/ic_brightness_1_black_24dp"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/button_back_home"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/ic_back_24dp" />
-
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/button_Edit"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:text="แก้ไข"
-            android:layout_gravity="end"
-            android:textColor="#CACACA"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/background_button_lock" />
-    </android.support.v7.widget.Toolbar>
-
-    <com.dd.ShadowLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        app:sl_cornerRadius="15dp"
-        app:sl_dx="3dp"
-        app:sl_dy="5dp"
-        app:sl_shadowColor="#1D000000"
-        app:sl_shadowRadius="7dp">
-
-        <Button
-            android:id="@+id/buttonDeleteEvent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_delect_botton"
-            android:elevation="5dp"
-            android:paddingRight="50dp"
-            android:paddingLeft="50dp"
-            android:text="ลบกิจกรรมนี้"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-    </com.dd.ShadowLayout>
-
 
 </RelativeLayout>

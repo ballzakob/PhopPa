@@ -179,5 +179,13 @@ public interface Api {
             @Field("event_id") String event_id
     );
 
+    @FormUrlEncoded
+    @POST("getEvent.php")
+    Call<EventResponse> getEvent(
+            @Field("event_id") String event_id
+    );
+
+
+
 
 }

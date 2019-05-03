@@ -3,6 +3,8 @@ package com.example.phobpa.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.example.phobpa.R;
 import com.example.phobpa.adapter.UserJoinAdapter;
 import com.example.phobpa.api.RetrofitClient;
+import com.example.phobpa.modelsEvents.EventResponse;
 import com.example.phobpa.modelsUsers.DefaultResponse;
 import com.example.phobpa.modelsUsers.JoinResponse;
 import com.example.phobpa.modelsUsers.User;
@@ -46,6 +49,8 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
             textViewEventAddress, textViewNumberPeople, textViewShowText, textViewEventPrice;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
+
+    private Button button_Edit;
 
     private ImageView imageViewEvent;
     private GoogleMap mMap;
@@ -80,23 +85,23 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         textViewNumberPeople = findViewById(R.id.textViewNumberPeople);
         textViewShowText = findViewById(R.id.textViewShowText);
         textViewEventPrice = findViewById(R.id.textViewEventPrice);
-
-
         imageViewEvent = findViewById(R.id.imageViewEvent);
 
+        button_Edit = findViewById(R.id.button_Edit);
+        button_Edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String event_id = getIntent().getExtras().getString("event_id");
+                String email = getIntent().getExtras().getString("email");
+                Intent intent = new Intent(EventMeActivity.this,EditEventActivity.class);
+                intent.putExtra("event_id",event_id);
+                intent.putExtra("email",email);
+                startActivity(intent);
+            }
+        });
+
+
         String event_id = getIntent().getExtras().getString("event_id");
-        String event_title = getIntent().getExtras().getString("event_title");
-        String event_detail = getIntent().getExtras().getString("event_detail");
-        String event_number_people = getIntent().getExtras().getString("event_number_people");
-        String event_date_start = getIntent().getExtras().getString("event_date_start");
-        String event_date_end = getIntent().getExtras().getString("event_date_end");
-        String event_time_start = getIntent().getExtras().getString("event_time_start");
-        String event_time_end = getIntent().getExtras().getString("event_time_end");
-        String event_location_name = getIntent().getExtras().getString("event_location_name");
-        String event_location_address = getIntent().getExtras().getString("event_location_address");
-        String gender = getIntent().getExtras().getString("event_gender");
-        String price = getIntent().getExtras().getString("event_price");
-        countMax = Integer.valueOf(event_number_people);
 
         String picture = getIntent().getExtras().getString("event_image");
         if (picture.isEmpty()) {
@@ -107,28 +112,6 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
             Picasso.get().load(url).into(imageViewEvent);
         }
 
-        textViewEventTitle.setText(event_title);
-        textViewEventDetail.setText(event_detail);
-        textViewNumberPeopleMax.setText(event_number_people);
-        textViewEventDateStart.setText(splitDate(event_date_start));
-        textViewEventDateEnd.setText(splitDate(event_date_end));
-        textViewEventTimeStart.setText(splitTime(event_time_start));
-        textViewEventTimeEnd.setText(splitTime(event_time_end));
-
-        textViewEventLocationName.setText(event_location_name);
-        textViewEventAddress.setText(event_location_address);
-        textViewEventPrice.setText(price);
-
-
-        System.out.println(gender);
-        if (gender.equals("m")) {
-            gender = "ชาย";
-        } else if (gender.equals("f")) {
-            gender = "หญิง";
-        } else {
-            gender = "ชาย และ หญิง";
-        }
-        textViewEventGender.setText(gender);
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -142,8 +125,8 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         String email = getIntent().getExtras().getString("email");
         System.out.println("email : " + getIntent().getExtras().getString("email"));
 
-        Call<UserResponse> call = RetrofitClient.getInstance().getApi().getUser(email);
-        call.enqueue(new Callback<UserResponse>() {
+        Call<UserResponse> call3 = RetrofitClient.getInstance().getApi().getUser(email);
+        call3.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 System.out.println(response.body().getMessages());
@@ -190,11 +173,6 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
                         adapter = new UserJoinAdapter(EventMeActivity.this, userList);
                         recyclerView.setAdapter(adapter);
                     }
-
-                    countJoint = response.body().getUsers().size();
-                    String count = String.valueOf(response.body().getUsers().size());
-                    System.out.println(count);
-                    textViewNumberPeople.setText(count);
                 } else {
                 }
             }
@@ -206,6 +184,8 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
         });
         recyclerView = findViewById(R.id.recyclerView_home);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+
 
 
     }
@@ -373,6 +353,55 @@ public class EventMeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
         mapView.onStart();
+
+
+
+        String event_id = getIntent().getExtras().getString("event_id");
+
+        Call<EventResponse> call = RetrofitClient.getInstance().getApi().getEvent(event_id);
+        call.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
+                if(response.body().isStatus()){
+
+                    textViewEventTitle.setText(response.body().getEvents().get(0).getEvent_title());
+                    textViewEventDetail.setText(response.body().getEvents().get(0).getEvent_detail());
+                    textViewNumberPeople.setText(response.body().getEvents().get(0).getEvent_joint());
+                    textViewNumberPeopleMax.setText(response.body().getEvents().get(0).getEvent_number_people());
+                    textViewEventDateStart.setText(splitDate(response.body().getEvents().get(0).getEvent_date_start()));
+                    textViewEventDateEnd.setText(splitDate(response.body().getEvents().get(0).getEvent_date_end()));
+                    textViewEventTimeStart.setText(splitTime(response.body().getEvents().get(0).getEvent_time_start()));
+                    textViewEventTimeEnd.setText(splitTime(response.body().getEvents().get(0).getEvent_time_end()));
+                    textViewEventLocationName.setText(response.body().getEvents().get(0).getEvent_location_name());
+                    textViewEventAddress.setText(response.body().getEvents().get(0).getEvent_location_address());
+                    textViewEventPrice.setText(response.body().getEvents().get(0).getEvent_price());
+                    if(response.body().getEvents().get(0).getEvent_joint().equals("0")){
+                        button_Edit.setEnabled(true);
+                        button_Edit.setTextColor(Color.WHITE);
+                        button_Edit.setBackgroundResource(R.drawable.background_button);
+                    }else {
+                        button_Edit.setEnabled(false);
+                    }
+                    String gender = response.body().getEvents().get(0).getEvent_gender();
+                    if (gender.equals("m")) {
+                        gender = "ชาย";
+                    } else if (gender.equals("f")) {
+                        gender = "หญิง";
+                    } else {
+                        gender = "ชาย และ หญิง";
+                    }
+                    textViewEventGender.setText(gender);
+                }else{
+                    Toast.makeText(EventMeActivity.this, "false", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+                Toast.makeText(EventMeActivity.this, "fall", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
